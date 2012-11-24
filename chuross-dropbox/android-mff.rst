@@ -79,9 +79,11 @@ APIの利用にはDropboxアカウントとデベロッパー登録が必要で�
 
 登録が終わるとApp keyとSectet keyが取得できるので、これを後で利用します。
 
-.. image:: src/1.png
+.. figure:: src/1.eps
   :scale: 70%
   :alt: Dropboxのデベロッパー登録画面
+
+**Dropboxのデベロッパー登録画面**
 
 Androidへの導入
 =================
@@ -163,9 +165,11 @@ AndroidからDropbox認証を行う
 AppKeyPairのコンストラクタにデベロッパー登録時に取得したApp KeyとApp Secretをセットして、AndroidAuthSessionにAppKeyPairとデペロッパー登録時に選択したAccess typeを引数に入れます。
 そしてDropboxAPIの引数の中にAndroidAuthSessionを入れた後に、startAuthenticationを呼び出すとDropboxの認証画面が表示されるようになります。
 
-.. image:: src/2.png
+.. figure:: src/2.eps
   :scale: 70%
   :alt: startAuthentication後に表示される認証画面
+
+**startAuthentication後に表示される認証画面**
 
 Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ変数に入れて保持させましょう。
 この返り値は認証終わった後に使用します。
@@ -209,9 +213,11 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
 
 認証が完了するとDropboxから画像がダウンロードされます！やった！
 
-.. image:: src/3.png
+.. figure:: src/3.eps
   :scale: 70%
   :alt: 認証後のメイン画面
+
+**認証後のメイン画面**
 
 ----------------------------------------------------
 認証済みアクセストークンを取得する
@@ -282,7 +288,7 @@ Dropboxからファイルの取得する
   }
 
 Dropboxからファイルのダウンロードを行う
-===============================
+========================================
 関係のあるコード
 
    **DropboxApiManager(DropboxAPIの実行クラス)**
