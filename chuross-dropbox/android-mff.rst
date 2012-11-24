@@ -82,6 +82,7 @@ APIの利用にはDropboxアカウントとデベロッパー登録が必要で�
 .. figure:: src/1.eps
   :scale: 70%
   :alt: Dropboxのデベロッパー登録画面
+  :align: center
 
 **Dropboxのデベロッパー登録画面**
 
@@ -144,6 +145,8 @@ AndroidからDropbox認証を行う
 今回ぼくが作ったプロジェクトではDropboxAuthActivityという名前で実装しました。
 このActivity内呼ばれているDropboxApiManagerがDropbpxApiの処理を行っていて、Authenticationで認証処理を行います。
 
+  PageBreak
+
 .. code-block:: java
 
   /**
@@ -168,6 +171,7 @@ AppKeyPairのコンストラクタにデベロッパー登録時に取得したA
 .. figure:: src/2.eps
   :scale: 70%
   :alt: startAuthentication後に表示される認証画面
+  :align: center
 
 **startAuthentication後に表示される認証画面**
 
@@ -216,8 +220,11 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
 .. figure:: src/3.eps
   :scale: 70%
   :alt: 認証後のメイン画面
+  :align: center
 
 **認証後のメイン画面**
+
+  PageBreak
 
 ----------------------------------------------------
 認証済みアクセストークンを取得する
@@ -225,7 +232,6 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
 関係のあるコード
 
    **DropboxApiManager(DropboxAPIの実行クラス)**
-   `https://github.com/chuchuross/ImageGallery/blob/master/src/com/asomal/imagegallery/domain/dropbox/DropboxApiManager.java <https://github.com/chuchuross/ImageGallery/blob/master/src/com/asomal/imagegallery/domain/dropbox/DropboxApiManager.java>`_
 
 アクセストークンの取得は認証時に登録したSharedPreferencesから行います。
 今回作ったアプリではDropboxApiManagerの中に実装されている、getApiでトークン取得処理実行されています。
@@ -268,7 +274,6 @@ Dropboxからファイルの取得する
 関係のあるコード
 
    **DropboxApiManager(DropboxAPIの実行クラス)**
-   `https://github.com/chuchuross/ImageGallery/blob/master/src/com/asomal/imagegallery/domain/dropbox/DropboxApiManager.java <https://github.com/chuchuross/ImageGallery/blob/master/src/com/asomal/imagegallery/domain/dropbox/DropboxApiManager.java>`_
 
 フォルダにあるファイルを取得する時には先程説明したgetApiメソッドで取得したDropboxAPIの中にあるmetadataメソッドを利用することで取得する事ができます。
 取得先のファイルパスと、取得する最大項目数をセットして利用します。この時、フォルダ内にあるファイル以上の数値を入れるとエラーで落ちる事があるので注意しましょう。
@@ -288,14 +293,12 @@ Dropboxからファイルの取得する
   }
 
 Dropboxからファイルのダウンロードを行う
-========================================
+=========================================
 関係のあるコード
 
    **DropboxApiManager(DropboxAPIの実行クラス)**
-   `https://github.com/chuchuross/ImageGallery/blob/master/src/com/asomal/imagegallery/domain/dropbox/DropboxApiManager.java <https://github.com/chuchuross/ImageGallery/blob/master/src/com/asomal/imagegallery/domain/dropbox/DropboxApiManager.java>`_
 
    **ImageCache(画像キャッシュ)**
-   `https://github.com/chuchuross/ImageGallery/blob/master/src/com/asomal/imagegallery/domain/image/ImageCache.java <https://github.com/chuchuross/ImageGallery/blob/master/src/com/asomal/imagegallery/domain/image/ImageCache.java>`_
 
 ファイルの取得はgetApiで取得したDropboxAPIの中のgetFileStreamで行えます。
 先程の項目で説明したgetFileListメソッドで取得したファイルパスを基にgetFileStreamメソッドにファイルパスを入れると、Dropbox内に保存している画像のInputStreamを取得する事ができます。
