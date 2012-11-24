@@ -9,14 +9,14 @@ Welcome to Nanaka-inside-c83's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
 
    sample.rst
    git/git.rst
    git/git-flow.rst
    coreutils/coreutils.rst
    postgres/postgres-random.rst
-   android/android-mff.rst
+   chuross-dropbox/android-mff.rst
 
 Indices and tables
 ==================
