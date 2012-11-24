@@ -84,7 +84,7 @@ APIの利用にはDropboxアカウントとデベロッパー登録が必要で�
   :alt: Dropboxのデベロッパー登録画面
   :align: center
 
-**Dropboxのデベロッパー登録画面**
+  **Dropboxのデベロッパー登録画面**
 
 Androidへの導入
 =================
@@ -131,10 +131,8 @@ AndroidからDropbox認証を行う
 関係のあるコード
 
    **DropboxAuthActivity(Dropboxの認証画面)**
-   `https://github.com/chuchuross/ImageGallery/blob/master/src/com/asomal/imagegallery/domain/app/DropboxAuthActivity.java <https://github.com/chuchuross/ImageGallery/blob/master/src/com/asomal/imagegallery/domain/app/DropboxAuthActivity.java>`_
 
    **DropboxApiManager(DropboxAPIの実行クラス)**
-   `https://github.com/chuchuross/ImageGallery/blob/master/src/com/asomal/imagegallery/domain/dropbox/DropboxApiManager.java <https://github.com/chuchuross/ImageGallery/blob/master/src/com/asomal/imagegallery/domain/dropbox/DropboxApiManager.java>`_
 
 無事プロジェクトに導入したところで、いよいよ認証処理を実装します。
 認証画面を作るためにメインのActivityとは別のActivityを実装しましょう。
@@ -144,6 +142,8 @@ AndroidからDropbox認証を行う
 --------------------------
 今回ぼくが作ったプロジェクトではDropboxAuthActivityという名前で実装しました。
 このActivity内呼ばれているDropboxApiManagerがDropbpxApiの処理を行っていて、Authenticationで認証処理を行います。
+
+.. raw:: pdf
 
   PageBreak
 
@@ -173,7 +173,7 @@ AppKeyPairのコンストラクタにデベロッパー登録時に取得したA
   :alt: startAuthentication後に表示される認証画面
   :align: center
 
-**startAuthentication後に表示される認証画面**
+  **startAuthentication後に表示される認証画面**
 
 Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ変数に入れて保持させましょう。
 この返り値は認証終わった後に使用します。
@@ -222,7 +222,9 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
   :alt: 認証後のメイン画面
   :align: center
 
-**認証後のメイン画面**
+  **認証後のメイン画面**
+  
+.. raw:: pdf
 
   PageBreak
 
