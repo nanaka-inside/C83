@@ -245,7 +245,7 @@ R.string.sp_dropbox_auth), Context.MODE_PRIVATE);
       }
 
       AppKeyPair access = new AppKeyPair(res.getString(R.string.dropbox_app_key),
- res.getString(R.string.dropbox_app_secret));
+res.getString(R.string.dropbox_app_secret));
       AndroidAuthSession session = new AndroidAuthSession(access, AccessType.APP_FOLDER);
 
       DropboxAPI<AndroidAuthSession> dropboxApi = new DropboxAPI<AndroidAuthSession>(session);
@@ -285,6 +285,7 @@ Dropboxからファイルの取得する
 Dropboxからファイルのダウンロードを行う
 ===============================
 関係のあるコード
+
    **DropboxApiManager(DropboxAPIの実行クラス)**
    `https://github.com/chuchuross/ImageGallery/blob/master/src/com/asomal/imagegallery/domain/dropbox/DropboxApiManager.java <https://github.com/chuchuross/ImageGallery/blob/master/src/com/asomal/imagegallery/domain/dropbox/DropboxApiManager.java>`_
 
