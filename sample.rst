@@ -7,14 +7,20 @@
    ここもコメント
    まだまだコメント
 
+================
 chapter 1 章です
 ================
-.. 章ですの後ろあるいはぴったりまで === がないと効果がなくなるので注意
+.. 「chapter 1 章です」の後ろあるいはぴったりまで === がないと効果がなくなるので注意
+    この文章は=,-,^の順で階層化している。この順は慣習であるらしい
+    違う記号がでてきたら、階層化のレベルが変化する。このへんのニュアンスは慣れろ！
 
 section 1
 ----------
 
 .. toctree::
+.. ここからtoctreeを入れ子に出来る
+   構造については、http://sphinx-users.jp/gettingstarted/make_project.html
+   toctreeを使って階層化するならindex.rstで :maxdepth: 3 としておいたほうが無難
 
 subsectionみたいな
 ===================
@@ -22,14 +28,17 @@ subsectionみたいな
 subsubsectionみたいな
 ---------------------
 
+subsubsectionみたい２
+---------------------
+
 そして章が次に進む
 ==================
 
-sectionみたいな
-------------------
-
 書体の変更
 ----------
+
+下記の例をそのままお借りしました。
+http://sphinx-users.jp/gettingstarted/use_markup.html
 
 **太字**
 
@@ -130,6 +139,7 @@ Lorem ipsum [Ref]_ dolor sit amet.
 
 subsection?
 ^^^^^^^^^^^^
+
 topicらしい
 ------------
 .. topic:: Topic Title
@@ -137,6 +147,17 @@ topicらしい
    Subsequent indented lines comprise
    the body of the topic, and are
    interpreted as body elements.
+
+
+diagram
+--------
+
+.. blockdiag::
+
+   blockdiag admin {
+   top_page -> config -> config_edit -> config_confirm -> top_page;
+   }
+
 
 
 テーブル

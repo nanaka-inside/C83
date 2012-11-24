@@ -13,11 +13,11 @@ Contents:
 
    sample.rst
    git/git.rst
-   git/git-flow.rst
-   git/jenkins.rst
+   android/chuross.rst
+
    coreutils/coreutils.rst
-   postgres/postgres-random.rst
-   chuross-dropbox/android-mff.rst
+.. postgres/postgres-random.rst
+
 
 Indices and tables
 ==================
