@@ -50,11 +50,10 @@ Dropboxにあるファイル操作を外部のアプリケーションで行う�
 これらの機能が自分の作ったアプリで利用できるようになります！素敵ですね。
 Android版の他にもiOS版、Ruby版などがあるので作りたい環境に合わせてAPIを利用できるのはいいですね！今回はAndroid版を使用します。
 
-DropboxAPIを利用するために必要な物
+**DropboxAPIを利用するために必要な物**
 
 SDKは `https://www.dropbox.com/developers/reference/sdk <https://www.dropbox.com/developers/reference/sdk>`_ で入手することができます。
 APIの利用にはDropboxアカウントとデベロッパー登録が必要です。
-
 デベロッパー登録は `https://www.dropbox.com/developers <https://www.dropbox.com/developers>`_ の「My apps」から行えます。
 
 **入力項目**
@@ -152,7 +151,7 @@ AndroidからDropbox認証を行う
    */
   public DropboxAPI<AndroidAuthSession> Authentication() {
       AppKeyPair appkeys = new AppKeyPair(res.getString(R.string.dropbox_app_key),
- res.getString(R.string.dropbox_app_secret));
+  res.getString(R.string.dropbox_app_secret));
       AndroidAuthSession session = new AndroidAuthSession(appkeys, AccessType.APP_FOLDER);
 
       DropboxAPI<AndroidAuthSession> dropboxApi = new DropboxAPI<AndroidAuthSession>(session);
@@ -197,7 +196,7 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
       //取得したトークンをSharedPreferencesに保存する
       Resources res = getResources();
       SharedPreferences sp = getSharedPreferences(res.getString(R.string.sp_dropbox_auth),
- MODE_PRIVATE);
+  MODE_PRIVATE);
       Editor edit = sp.edit();
       edit.putBoolean(res.getString(R.string.sp_key_is_autentication), true);
       edit.putString(res.getString(R.string.sp_key_access_token), tokens.key);
@@ -235,7 +234,7 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
    */
   private DropboxAPI<AndroidAuthSession> getApi() throws DropboxException {
       SharedPreferences sp = context.getSharedPreferences(res.getString(
-R.string.sp_dropbox_auth), Context.MODE_PRIVATE);
+  R.string.sp_dropbox_auth), Context.MODE_PRIVATE);
 
       String userToken = sp.getString(res.getString(R.string.sp_key_access_token), null);
       String userSecret = sp.getString(res.getString(R.string.sp_key_access_token_secret), null);
@@ -245,7 +244,7 @@ R.string.sp_dropbox_auth), Context.MODE_PRIVATE);
       }
 
       AppKeyPair access = new AppKeyPair(res.getString(R.string.dropbox_app_key),
-res.getString(R.string.dropbox_app_secret));
+  res.getString(R.string.dropbox_app_secret));
       AndroidAuthSession session = new AndroidAuthSession(access, AccessType.APP_FOLDER);
 
       DropboxAPI<AndroidAuthSession> dropboxApi = new DropboxAPI<AndroidAuthSession>(session);
