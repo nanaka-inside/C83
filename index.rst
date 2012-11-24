@@ -13,6 +13,7 @@ Contents:
 
    sample.rst
    git/git.rst
+   git/git-flow.rst
    coreutils/coreutils.rst
    postgres/postgres-random.rst
    android/android-mff.rst
