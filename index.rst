@@ -14,8 +14,7 @@ Contents:
    sample.rst
    git/git.rst
    git/git-flow.rst
-   android/chuross.rst
-
+   chuross-dropbox/android-mff.rst
    coreutils/coreutils.rst
 .. postgres/postgres-random.rst
 

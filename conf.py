@@ -290,3 +290,5 @@ intersphinx_mapping = {'http://docs.python.org/': None}
 
 blockdiag_fontpath = './ttf/sazanami-gothic.ttf'
 
+blockdiag_tex_image_format = 'PDF'
+

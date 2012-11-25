@@ -152,8 +152,12 @@ topicらしい
 diagram
 --------
 
-.. blockdiag::
+blockdiagを使うとき、png画像ででてくる。pngのファイルをそのままLaTeXでビルドするとこける。
+conf.py で blockdiag_tex_image_format = 'PDF' するとPDFをそのまま貼り付けようとするので失敗する。
+epsで出すようにできないもんだろうかなー
 
+.. 
+   .. blockdiag::
    blockdiag admin {
    top_page -> config -> config_edit -> config_confirm -> top_page;
    }
