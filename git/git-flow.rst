@@ -1,4 +1,4 @@
-git+git-flow入門
+git-flow入門
 #################
 
 開発の現場でバージョン管理を導入する際に、Subversion(以下、SVN)よりGitを採用しようという話を聞きます。また、GitのホスティングサービスであるGithub [#f1]_ にアカウントを持っているエンジニアも増えています。この機運の高まりからわかるように、これからはGitです。Gitが普通に使えるエンジニアがイケてるエンジニアですね！
@@ -7,6 +7,20 @@ git+git-flow入門
 
 git-flowという考え方
 *********************
+
+git-flowについて知るには `git-flowによるブランチの管理`_ [RefGitFlow]_ を参照しましょう。このサイトでは次のように説明があります。
+
+.. _git-flowによるブランチの管理 : http://www.oreilly.co.jp/community/blog/2011/11/branch-model-with-git-flow.html
+
+  .. [RefGitFlow] git-flow は Vincent Driessen 氏によって書かれた `A successful Git branching model`_ (`O-Show 氏による日本語訳`_) というブランチモデルを補助するための git 拡張です。 git-flow を利用する前には、まずこの文章を一読することをおすすめします。 その骨子については、 Voluntas 氏のブログ が参考になります。
+
+.. _A successful Git branching model : http://nvie.com/posts/a-successful-git-branching-model/
+.. _O-Show 氏による日本語訳 : http://keijinsonyaban.blogspot.jp/2010/10/successful-git-branching-model.html
+
+要するに、Gitブランチをどのように運用するかを決めたガイドラインの一つです。基本的な操作手順では必ずmasterに対して説明がありますが、このmasterもブランチです。SVNと違ってGitにはブランチしかありません。効率的なバージョン管理ができるかどうかは、このブランチの運用ルールに掛かっていると言っても過言ではありません。
+
+
+
 
 git-flowコマンドを使う
 ***********************
