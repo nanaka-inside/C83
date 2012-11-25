@@ -13,6 +13,7 @@ Contents:
 
    sample.rst
    git/git.rst
+   git/git-flow.rst
    android/chuross.rst
 
    coreutils/coreutils.rst
