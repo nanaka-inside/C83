@@ -5,6 +5,13 @@ git+git-flow入門
 
 さて、Git入門系の書籍やブログなりの情報は、検索すればたくさん出てくるのでここでは触れずに、Gitにある程度慣れてきたがGitのブランチをどのようなルールで運用するのかというテーマで、git-flowという考え方を取り上げて解説したいとおもいます。
 
+git-flowという考え方
+*********************
+
+git-flowコマンドを使う
+***********************
+
+
 git + git-flow の環境構築手順
 ******************************
 
@@ -74,10 +81,23 @@ homebrewを使ってインストールし、バージョンを確認できれば
   $ git --version
   git version 1.X.X
 
-git-flowをインストールする
----------------------------
+.gitconfigに名前とメールアドレスを設定する
+--------------------------------------------
+
+コミット時に利用される名前とメールアドレスを次のコマンドを実行し設定する。
 
 .. code-block:: console
+
+  $ git config --global user.name "あなたの名前"
+  $ git config --global user.email your_name@dwango.co.jp
+
+
+git-flowをインストールする
+---------------------------
+homebrewからgit-flowをインストールする。
+
+.. code-block:: console
+
    $ brew install git-flow
    $ git-flow version
 
