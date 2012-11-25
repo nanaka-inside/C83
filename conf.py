@@ -288,5 +288,5 @@ epub_copyright = u'2012, nanaka'
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'http://docs.python.org/': None}
 
-blockdiag_fontpath = '/usr/share/fonts/japanese/TrueType/sazanami-gothic.ttf'
+blockdiag_fontpath = './ttf/sazanami-gothic.ttf'
 
