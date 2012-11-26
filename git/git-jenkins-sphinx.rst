@@ -8,13 +8,15 @@ Git + Jenkins + Sphinxでドキュメント生成
 きっかけ
 *********
 
-j5ik2o「前回 LaTeX で作ったから、今回は Sphinx でいこうよ」
+.. topic:: ある日の会話
 
-tboffice「Sphinxですか...」( 前回 LaTeX で苦労してたのに、また新しいのキター)
-
-j5ik2o「ドキュメントはgithubに入ってるから、Jenkins入れて自動ビルドできたらいいね！」
-
-tboffice「Jenkinsですか...」(Jenkinsおじさんはみたことがあるけれど使ったことがないなー) 
+   j5ik2o「前回 LaTeX で作ったから、今回は Sphinx でいこうよ」
+   
+   tboffice「Sphinxですか...」( 前回 LaTeX で苦労してたのに、また新しいのキター)
+   
+   j5ik2o「ドキュメントはgithubに入ってるから、Jenkins入れて自動ビルドできたらいいね！」
+   
+   tboffice「Jenkinsですか...」(Jenkinsおじさんはみたことがあるけれど使ったことがないなー) 
 
 
 いままで
@@ -22,23 +24,29 @@ tboffice「Jenkinsですか...」(Jenkinsおじさんはみたことがあるけ
 
 登場人物：ビルドマスターtboffice、メンバーA、メンバーB。
 
-前号 [#gjs-zengou]_ を執筆したときは、TeXファイルを書いて、専用のビルド環境でdvipdfmxを使ってビルドしていました。そのときの会話をお聞き下さい。
+.. topic:: ある日よりも前の会話
 
-メンバーA「ファイル修正したからビルドしてー」
+   前号 [#gjs-zengou]_ を執筆したときは、TeXファイルを書いて、専用のビルド環境でdvipdfmxを使ってビルドしていました。そのときの会話をお聞き下さい。
+   
+   メンバーA「ファイル修正したからビルドしてー」
+   
+   tboffice「ビルドするでー、あ、ここでこけたから修正してー」
+   
+   メンバーA「修正するー」
+   
+   メンバーB「おい、自分のドキュメントがビルドできなくなったぞ」
+   
+   tboffice「スマソ」
 
-tboffice「ビルドするでー、あ、ここでこけたから修正してー」
-
-メンバーA「修正するー」
-
-メンバーB「おい、自分のドキュメントがビルドできなくなったぞ」
-
-tboffice「スマソ」
 
 そんな感じで、誰かがこけると誰かの作業が止まるという非常によろしくない環境でした。githubでドキュメントを管理していましたが、ファイルの置き場を化していました。
 
 導入後
 *******
-tboffice「githubにpushするといつのまにかビルドしてpdf作ってくれる！なにこれすげー」
+
+.. topic:: 導入後の喜びの声をお聞き下さい
+
+   tboffice「githubにpushするといつのまにかビルドしてpdf作ってくれる！なにこれすげー」
 
 誰がいつpushしても、1分くらい待てばビルドしたpdfができあがるようになるのでした。
 
@@ -48,7 +56,7 @@ tboffice「githubにpushするといつのまにかビルドしてpdf作って�
 まえがき終わりです [#gjs-e]_ 。
 今回、Sphinx(スフィンクス) を使って誌面を作ろうということになりました。Sphinxは、python製のドキュメントビルダーです。rst(reStructureText)形式 [#gjs-rst]_ で書かれたプレーンテキストを用意します。そのファイルを、コマンドラインからmakeします。make時のオプションで、HTML形式やepub形式といったドキュメントへ変換できます。前号で使っていたLaTeX(dvipdfmx)環境があったのでそれをそのまま流用し、LaTeXを経由して入稿用のpdfを出力します。
 
-.. [#gjs-zengou] コミックマーケット82で頒布した、ななかInside Press 夏のことです
+.. [#gjs-zengou] コミックマーケット82で頒布した、「ななかInside Press 夏」のことです
 .. [#gjs-e] えっ!?
 .. [#gjs-rst] 見た目は、markdownやwiki記法に似ていないこともないマークアップ言語
 
@@ -64,8 +72,8 @@ tboffice「githubにpushするといつのまにかビルドしてpdf作って�
 
 用いた環境
 ----------
-* CentOS 5.7(さくらのVPS)
-* Sphinx 1.1.3 (デフォルトではdvipdfmxを使ってくれないので設定が必要 [gjs-fmx1]_ )
+* CentOS 5.7 64bit (さくらのVPS)
+* Sphinx 1.1.3 (デフォルトではdvipdfmxのオプションがないので設定が必要 [#gjs-fmx1]_ )
 * TeX Live 2012
 * Java 7u9 (JRE)
 * Apache Tomcat 7.0.33
@@ -76,14 +84,14 @@ tboffice「githubにpushするといつのまにかビルドしてpdf作って�
 
 インストール
 ------------
-SphinxとTeX Live のインストール方法は省略します [#gjs-fmx]_ 。
+SphinxとTeX Live [#gjs-fmx]_ のインストール方法は省略します。
 
 .. [#gjs-fmx] dvipdfmxコマンドを使えるようにしておきましょう
 
 Javaは公式サイトからrpmを持ってきてインストール。tomcatのtar ballも持ってきてセオリー通りに展開。
 
 
-.. code-block:: sh
+.. code-block:: console
 
    # rpm -ivh java-7u9.rpm
    # tar zvxf apache-tomcat-7.0.33.tar.gz -C /usr/local/
@@ -91,10 +99,10 @@ Javaは公式サイトからrpmを持ってきてインストール。tomcatのt
    # ln -s apache-tomcat-7.0.33 apache-tomcat
 
 
-Jenkins のインストールは、公式サイトから、warファイルをダウンロード。tomcatのwebappディレクトリに置くだけ。
+Jenkins のインストールは、公式サイトから、warファイルをダウンロード。tomcatのwebappsディレクトリに置くだけ。
 
 
-.. code-block:: sh
+.. code-block:: console
 
    # cd  /usr/local/apache-tomcat/webapps/
    # wget http://mirrors.jenkins-ci.org/war/latest/jenkins.war
@@ -104,11 +112,10 @@ Jenkins のインストールは、公式サイトから、warファイルをダ
 アプリケーションの起動と設定
 ----------------------------
 
-
 tomcatを起動
 *************
 
-.. code-block:: sh
+.. code-block:: console
 
    # cd /usr/local/apache-tomcat/bin
    # sh start.sh
@@ -126,10 +133,10 @@ tomcatを起動
 
 .. [#gjs-port] アクセスできないときは、ファイアウォールなどで遮断していないことを確認してください
 .. [#gjs-jen-dir] 起動したときに /usr/local/apache-tomcat/webapps/jenkins/ ディレクトリができることを確認しておきましょう
-.. [#gjs-tomcat-root] ここではrootで作業していますが、jenkinsユーザを作ってそこで立ち上げる方が無難かと思います。起動時のユーザの ~.jenkinsディレクトリ下に作成したジョブなどができるので注意
+.. [#gjs-tomcat-root] ここではrootで作業していますが、jenkinsユーザを作ってそこで立ち上げる方が無難かと思います。起動時のユーザの ~/.jenkinsディレクトリ下に作成したジョブなどができるので注意
 .. [#gjs-tomcat-stop] stopするときは、start.shと同じディレクトリにある shutdown.sh を実行します。トイレに行って戻ってくるとjavaのプロセスが終了している感じです。焦らない、焦らない
-.. [#gjs-tomcat-stop2] Jenkinsの設定画面からシャットダウンをあらかじめやっておくと、プロセスが落ちるのが早い気がする
-.. [#gjs-nanndekonnna] どうしてこんなに注釈がおおいんだ。どうしてこうなった。増やしてどうする←
+.. [#gjs-tomcat-stop2] でも、Jenkinsの設定画面からシャットダウンをあらかじめやっておくと、プロセスが落ちるのが早い気がします
+.. [#gjs-nanndekonnna] そしてどうしてこんなに注釈が多いんだ。どうしてこうなった。増やしてどうする←
 
 
 Jenkinsの設定
@@ -176,7 +183,7 @@ jenkinsにプロジェクト作成
 「ビルド」の部分でシェルの実行を選択。シェルスクリプトを書け！と言われるのでsphinxのmakeコマンドを書きます。
 
 
-:: 
+.. code-block:: console
 
    PATH=$PATH:/usr/local/texlive/2012/bin/x86_64-linux/
    make html && make latexpdfja
@@ -196,13 +203,13 @@ jenkinsにプロジェクト作成
 
 ビルド結果
 ***********
-ビルドがOKなら青で示され、pdfが出力されているので確認します。
-もしビルドがNGなら赤で示されています。コンソール出力からコケた理由をみることができます。
+ビルドがOKなら青で示され、pdfが出力されているので確認します。プロジェクトの「ワークスペース」から自動でビルドされたファイルを見ることが出来ます。
+もしビルドがNGなら赤で示されています。コンソール出力から失敗した理由を調査して修正し、再度pushしましょう。
 
 
 おしまい
 --------
-こうしてgithubにpushするとpdfが生成できる環境ができあがったのでした [#gjs-acc]_ 。
+こうしてgithubにpushするとpdfが生成できる環境ができあがったのでした [#gjs-acc]_ [#gjs-mo]_ 。
 
 .. [#gjs-acc] アカウント管理について書いていませんでしたが、ジョブに対してログインアカウントを作ることが出来るので、各自やってみて下さい
-
+.. [#gjs-mo] githubにpushする前に、rstファイルが意図したとおりになっているかローカルで確認する必要があります。ツールについてはrst2pdf(http://code.google.com/p/rst2pdf/)などがあります。

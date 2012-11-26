@@ -132,9 +132,9 @@ Lorem ipsum [#f1]_ dolor sit amet          ... [#f2]_
 
 引用
 -----
-Lorem ipsum [Ref]_ dolor sit amet.
+Lorem ipsum [9]_ dolor sit amet.
 
-.. [Ref] 参考になった書籍、論文、URL、その他
+.. [9] 参考になった書籍、論文、URL、その他
 
 
 subsection?

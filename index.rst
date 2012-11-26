@@ -11,7 +11,6 @@ Contents:
 .. toctree::
    :maxdepth: 4
 
-   sample.rst
    git/git.rst
    git/git-flow.rst
    git/git-jenkins-sphinx.rst
