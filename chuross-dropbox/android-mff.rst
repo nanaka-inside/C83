@@ -218,7 +218,7 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
 認証が完了するとDropboxから画像がダウンロードされます！やった！
 
 .. figure:: src/3.eps
-  :scale: 70%
+  :scale: 50%
   :alt: 認証後のメイン画面
   :align: center
 
