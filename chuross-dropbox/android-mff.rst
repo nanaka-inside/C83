@@ -181,6 +181,12 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
 --------------------------
 認証が終わった後
 --------------------------
+.. figure:: src/3.eps
+  :scale: 50%
+  :alt: 認証後のメイン画面
+  :align: center
+
+  **認証後のメイン画面**
 認証後の処理は認証画面のActivity内にあるonResumeで行います。
 認証が成功しているかどうかはAuthenticationメソッドの処理で返しているDropboxAPI<AndroidAuthSession>からgetSessionからsessionを取得し、authenticationSuccessfulを呼び出すことで判別できます。
 
@@ -216,17 +222,7 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
   }
 
 認証が完了するとDropboxから画像がダウンロードされます！やった！
-
-.. figure:: src/3.eps
-  :scale: 50%
-  :alt: 認証後のメイン画面
-  :align: center
-
-  **認証後のメイン画面**
   
-.. raw:: pdf
-
-  PageBreak
 
 ----------------------------------------------------
 認証済みアクセストークンを取得する
