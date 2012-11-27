@@ -180,7 +180,9 @@ latex_elements = {
 # Additional stuff for the LaTeX preamble.
 #'preamble': '',
 
-'babel':'',
+'classoptions': ',oneside',
+'babel': '\\usepackage[english]{babel}'
+
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
