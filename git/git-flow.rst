@@ -126,7 +126,7 @@ git-flowコマンドを使う
   $ git commit README.txt -m 'aaaaa追加'
   $ echo "bbbbb" >> README.txt
   $ git add README.txt
-  $ git commit README.txt -m 'aaaaa追加'
+  $ git commit README.txt -m 'bbbbb追加'
 
 ===========================
 featureブランチを終了する
