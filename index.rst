@@ -13,8 +13,8 @@ Contents:
 
    git/git.rst
    git/git-flow.rst
-   git/jenkins.rst
    git/git-jenkins-sphinx.rst
+   git/jenkins.rst
    chuross-dropbox/android-mff.rst
 
    coreutils/coreutils.rst

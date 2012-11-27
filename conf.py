@@ -178,7 +178,12 @@ latex_elements = {
 #'pointsize': '10pt',
 
 # Additional stuff for the LaTeX preamble.
-#'preamble': '',
+#'preamble': '\\makeatletter\n\
+  #\\renewcommand{\\chapter}{%\n\
+  #\\if@openright\\cleardoublepage\\else\\clearpage\\fin\n\
+  #\\global\\@topnum\\z@\n\
+  #\\secdef\\@chapter\\@schapter}\n\
+#\\makeatother',
 
 'classoptions': ',oneside',
 'babel': '\\usepackage[english]{babel}'
@@ -189,7 +194,7 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'Nanaka-inside-c83.tex', u'ななかInside Press vol.2',
-   u'j5ik2o and mtgto and chuross and tboffice and ijust', 'manual'),
+   u'j5ik2o and mtgto and chuross and tboffice and ijust', 'howto'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -214,7 +219,8 @@ latex_use_parts = True
 #latex_domain_indices = True
 
 # add by tboffice 2012-11-27
-latex_docclass = {'manual':'jsarticle'}
+#latex_docclass = {'manual':'jarticle'}
+latex_docclass = {"howto": "jsarticle", "manual": "jsbook"}
 
 # -- Options for manual page output --------------------------------------------
 

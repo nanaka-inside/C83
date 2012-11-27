@@ -15,22 +15,15 @@ Coreutils 大全
 
 Coreutilsとは
 -------------
-lsやcatなど、linuxでは欠かせないコマンドをまとめたパッケージです。Fileutils, Shellutils, Textutilsを統合したものです。
-CoreutilsのChangeLogをみたところ、一番古い日付は2002-07-01でした。おそらくそのころに統合されたのでしょう。
-<<<<<<< Updated upstream
-メジャーバージョンは2003年4月にバージョン5として登場しました。
-.. ほかにUtils系ってないの？という話をすると、binutils(stringsコマンドとか), findutils(findとかxargsとか), inetutils(pingとか)があります。そのほかについては各自調べてください。
+lsやcatなど、linuxでは欠かせないコマンドをまとめたパッケージです。Fileutils, Shellutils, Textutilsを統合したものです。CoreutilsのChangeLogをみたところ、一番古い日付は2002-07-01でした。おそらくそのころに統合されたのでしょう。メジャーバージョンは2003年4月にバージョン5として登場しました。
 
-=======
-ほかにUtils系ってないの？という話をすると、binutils(stringsコマンドとかが含まれている), findutils(findとかxargsとか), inetutils(pingとか)があります。 [#core-utils]_ そのほかについては各自調べてください [#core-nage1]_
-
-.. メジャーバージョンとしては2003年4月にバージョン5として登場しました。
+ほかにUtils系ってないの？という話をすると、binutils(stringsコマンドとかが含まれている), findutils(findとかxargsとか), inetutils(pingとか)があります。 
 
 
 本校の構成
 ----------
 最初にcoreutilsパッケージのコマンドに共通のオプションを解説し、coreutilsのマニュアルの通りにコマンドを並べています。
->>>>>>> Stashed changes
+
 
 共通のオプション
 -----------------
