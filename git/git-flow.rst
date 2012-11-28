@@ -42,13 +42,15 @@ git-flowコマンドを使う
 事前準備
 =========
 
-次のようなコマンドで事前準備を行います。originのurlは任意のものでよいです。
+次のようなコマンドでローカルにGitリポジトリを準備します。
+
+REAME.txtを作ってコミットしてます。
 
 .. code-block:: console
 
   $ mkdir sandbox
   $ cd sandbox
-  $ touch README.txt
+  $ echo "Hello, Git" >  README.txt
   $ git init
   $ git add README.txt
   $ git commit README.txt -m 'first commit'
@@ -87,7 +89,7 @@ git-flowコマンドを使う
   Support branches? [support/]
   Version tag prefix? []
 
-必要に応じて、リモート上のセントラルリポジトリを設定し、pushします。
+必要に応じて、リモート上のセントラルリポジトリを設定し、pushします。originのurlは任意のものでよいです。
 
 .. code-block:: console
 
@@ -99,7 +101,8 @@ git-flowコマンドを使う
 ==================================
 
 それでは実際にブランチを作成しながらgit-flowコマンドを実行してみましょう。
-とある新機能を実装することになったので、次のとおりfeatureブランチを作成します。
+
+とある新機能を実装することになったので、次のとおりfeatureブランチを作成します。 ``feature`` ブランチには ``feature/`` というプレフィックス名が付きます。
 
 .. code-block:: console
 
@@ -148,8 +151,8 @@ featureブランチを終了する
   - Feature branch 'feature/PRJ-123_kato' has been removed
   - You are now on branch 'develop'
 
- ``feature/PRJ-123_kato`` ブランチの変更が ``develop`` ブランチにマージされ、削除されたことがわかります。
-コミットログを確認します。マージされていることが確認できます。
+``feature/PRJ-123_kato`` ブランチの変更が ``develop`` ブランチにマージされ、削除されたことがわかります。
+コミットログを確認します。マージコミットがコミットされて、マージが完了したことが確認できます。
 
 .. code-block:: console
 
@@ -182,7 +185,6 @@ featureブランチを終了する
 
 .. tip::  ``feature`` ブランチでのコミットが1つだけの場合に ``git flow feature finish`` コマンドを実行した場合は次のようなコミットになります。つまり、 ``feature`` ブランチが存在しなかったことになってしまいます。 ``finish`` に ``feature`` ブランチも削除されてしまうので、注意が必要です。
 
-
 .. code-block:: console
 
   * commit 7387073ccb80243c42e9c93f93fa88ab9f96ed4e
@@ -199,12 +201,65 @@ featureブランチを終了する
 
 
 ==========================
-relaseブランチを開始する
+releaseブランチを開始する
 ==========================
 
+あなたはついにリリースの時を迎えました。リリース準備を行うため次のコマンドを実行して ``release`` ブランチを作成します。``start`` の後ろにはリリース番号を指定します。
+
+.. code-block:: console
+
+  $ git flow release start 1.0.0
+  Switched to a new branch 'release/1.0.0'
+
+  Summary of actions:
+  - A new branch 'release/1.0.0' was created, based on 'develop'
+  - You are now on branch 'release/1.0.0'
+
+  Follow-up actions:
+  - Bump the version number now!
+  - Start committing last-minute fixes in preparing your release
+  - When done, run:
+
+       git flow release finish '1.0.0'
+
+``release/1.0.0`` というブランチに切り替わりました。
+ここでは適当にREADME.txtを編集していますが、本来はリリース作業のためのビルドツールのバージョン番号を変更したり、リリースノートを書いたりします。
+
+.. code-block:: console
+
+  $ vi README.txt # リリースのために編集
+  $ git add README.txt
+  $ git commit README.txt -m 'first release'
+
+
 ==========================
-relaseブランチを終了する
+releaseブランチを終了する
 ==========================
+
+リリースの準備が整ったら、次のコマンドでリリース作業を行います。
+
+.. code-block:: console
+
+  $ git flow release finish 1.0.0
+  Switched to branch 'master'
+  Merge made by the 'recursive' strategy.
+   README.txt |    4 ++++
+   1 file changed, 4 insertions(+)
+  Switched to branch 'develop'
+  Merge made by the 'recursive' strategy.
+   README.txt |    2 ++
+   1 file changed, 2 insertions(+)
+  Deleted branch release/1.0.0 (was 5b69f4d).
+
+  Summary of actions:
+  - Latest objects have been fetched from 'origin'
+  - Release branch has been merged into 'master'
+  - The release was tagged '1.0.0'
+  - Release branch has been back-merged into 'develop'
+
+
+コマンドを実行すると、masterブランチに切り替りdevelopブランチからにマージします。このマージは--no-ffで行われます。マージが終わるとそのリビジョンでタグを作成します。タグ名はfinishの後に指定したバージョン番号です。
+
 
 ==========================
 hotfixブランチを開始する
