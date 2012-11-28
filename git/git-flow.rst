@@ -222,8 +222,8 @@ releaseブランチを開始する
 
        git flow release finish '1.0.0'
 
-``release/1.0.0`` というブランチに切り替わりました。
-ここでは適当にREADME.txtを編集していますが、本来はリリース作業のためのビルドツールのバージョン番号を変更したり、リリースノートを書いたりします。
+``release/1.0.0`` というリリースブランチに切り替わりました。
+ここでは ``release/1.0.0`` 上で適当にREADME.txtを編集していますが、本来はリリース作業のためのビルドツールのバージョン番号を変更したり、リリースノートを書いたりします。
 
 .. code-block:: console
 
@@ -258,7 +258,39 @@ releaseブランチを終了する
   - Release branch has been back-merged into 'develop'
 
 
-コマンドを実行すると、masterブランチに切り替りdevelopブランチからにマージします。このマージは--no-ffで行われます。マージが終わるとそのリビジョンでタグを作成します。タグ名はfinishの後に指定したバージョン番号です。
+このコマンドを実行すると、最初に ``release/1.0.0`` ブランチの変更を ``master`` ブランチに取り込むマージが実行されます。次にそのリビジョンでタグを作成します。タグ名はfinishの後に指定したバージョン番号です。次に ``release/1.0.0`` ブランチの変更を ``develop`` ブランチに取り込むマージが実行されます。ログは次のとおりになります。
+
+.. code-block:: console
+
+  *   commit 697df60130e06a39d25c1551d6b70100608623a0
+  |\  Merge: dfea61e 5b69f4d
+  | | Author: じゅんいち☆かとう <j5ik2o@gmail.com>
+  | | Date:   Wed Nov 28 14:37:21 2012 +0900
+  | |
+  | |     Merge branch 'release/1.0.0' into develop
+  | |
+  | * commit 5b69f4d0ff619579f5bc44b5b0aab9636a510652
+  |/  Author: じゅんいち☆かとう <j5ik2o@gmail.com>
+  |   Date:   Wed Nov 28 14:35:12 2012 +0900
+  |
+  |       first release
+  |
+  *   commit dfea61e1d30e1079f51240c9aa3e54d8729771ec
+  |\  Merge: cc4c19b f7f0e6d
+  | | Author: じゅんいち☆かとう <j5ik2o@gmail.com>
+  | | Date:   Wed Nov 28 01:04:49 2012 +0900
+  | |
+  | |     Merge branch 'feature/PRJ-123_kato' into develop
+  | |
+
+
+作成されたタグは次のコマンドで確認できます。
+
+.. code-block:: console
+
+  $ git tag -n
+  1.0.0           1.0.0 release
+
 
 
 ==========================
