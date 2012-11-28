@@ -10,6 +10,7 @@ Contents:
 
 .. toctree::
    :maxdepth: 4
+   :numbered:
 
    git/git.rst
    git/git-flow.rst
