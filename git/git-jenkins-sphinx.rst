@@ -46,7 +46,7 @@ Git + Jenkins + Sphinxでドキュメント生成
 
 .. [#gjs-cha] こんなキャラじゃないです念のため
 
-そんな感じで、誰かがこけると誰かの作業が止まるという非常によろしくない環境でした。githubでドキュメントを管理していましたが、ファイルの置き場を化していました。
+そんな感じで、誰かがこけると誰かの作業が止まるという非常によろしくない環境でした。githubでドキュメントを管理していましたが、ファイルの置き場と化していました。
 
 
 導入後
@@ -63,21 +63,23 @@ Git + Jenkins + Sphinxでドキュメント生成
 はじめに
 *****************
 
-まえがき終わりです [#gjs-e]_ 。
-今回、Sphinx(スフィンクス) を使って誌面を作ろうということになりました。Sphinxは、python製のドキュメントビルダーです。rst(reStructureText)形式 [#gjs-rst]_ で書かれたプレーンテキストを用意します。そのファイルを、コマンドラインからmakeします。make時のオプションで、HTML形式やepub形式といったドキュメントへ変換できます。前号で使っていたLaTeX(dvipdfmx)環境があったのでそれをそのまま流用し、LaTeXを経由して入稿用のpdfを出力します。
+まえがき終わりです [#gjs-e]_ [#gjs-ee]_ 。
+今回、Sphinx(スフィンクス) を使って誌面を作ろうということになりました。Sphinxは、python製のドキュメントビルダーです。rst(reStructuredText)形式 [#gjs-rst]_ で書かれたプレーンテキストを用意します。そのファイルを、コマンドラインからmakeします。make時のオプションで、HTML形式やepub形式といったドキュメントへ変換できます。前号で使っていたLaTeX(dvipdfmx)環境があったのでそれをそのまま流用し、LaTeXを経由して入稿用のpdfを出力します。
 
 .. [#gjs-zengou] コミックマーケット82で頒布した、「ななかInside Press 夏」のことです
-.. [#gjs-e] えっ!?
-.. [#gjs-rst] 見た目は、markdownやwiki記法に似ていないこともないマークアップ言語
+.. [#gjs-e] えっ
+.. [#gjs-ee] えっ
+.. [#gjs-rst] markdownやwiki記法に似ていないこともないマークアップ言語
 
 
 仕組み
 ======
 #. できあがったrstファイルをgithubにpush
-#. Jenkinsがpushされたことを検知
+#. Jenkinsが1分に1回ポーリングしていて、pushされたことを検知したら次へ
 #. Jenkinsが指定されたsphinxのmakeコマンドを実行
 #. makeコマンドの結果をJenkinsが取り込んで、ビルド成功/失敗を表示
 #. ビルドに成功していればpdfができている！
+#. ついでにビルド成功/失敗の記録がJenkinsに残っている
 
 
 用いた環境
@@ -86,7 +88,7 @@ Git + Jenkins + Sphinxでドキュメント生成
 * CentOS 5.7 64bit (さくらのVPS)
 * Sphinx 1.1.3 (デフォルトではdvipdfmxのオプションがないので設定が必要 [#gjs-fmx1]_ )
 * TeX Live 2012
-* Java 7u9 (JRE)
+* Java 7u9
 * Apache Tomcat 7.0.33
 * Jenkins 1.491
 
