@@ -6,7 +6,7 @@ git-flow入門
 
 開発の現場でバージョン管理を導入する際に、Subversion(以下、SVN)よりGitを採用しようという話を聞きます。また、GitのホスティングサービスであるGithub [#f1]_ にアカウントを持っているエンジニアも増えています。この機運の高まりからわかるように、これからはGitです。Gitが普通に使えるエンジニアがイケてるエンジニアですね！
 
-さて、Git入門系の書籍やブログなりの情報は、検索すればたくさん出てくるのでここでは触れずに、Gitにある程度慣れてきたがGitのブランチをどのようなルールで運用するのかというテーマで、git-flowという考え方を取り上げて解説したいとおもいます。
+さて、Git入門系の書籍やブログなりの情報は、検索すればたくさん出てくるのでここでは触れずに、Gitにある程度慣れてきたがGitのブランチをどのようなルールで運用したらいいのかというテーマで、git-flowという考え方を取り上げて解説したいとおもいます。
 
 gitとgit-flowの環境を構築したい方は :ref:`git-flow-install-label` を参照してください。
 
@@ -42,9 +42,9 @@ git-flowコマンドを使う
 事前準備
 =========
 
-次のようなコマンドでローカルにGitリポジトリを準備します。
+``git-flow`` を実践的に解説するために、次のようなコマンドでローカルにGitリポジトリを準備します。
 
-REAME.txtを作ってコミットしてます。
+編集対象としてなにかファイルがあった方がよいので、ここではREAME.txtを作ってコミットします。
 
 .. code-block:: console
 
@@ -100,9 +100,9 @@ REAME.txtを作ってコミットしてます。
  featureブランチを開始する
 ==================================
 
-それでは実際にブランチを作成しながらgit-flowコマンドを実行してみましょう。
+それでは実際にブランチを作成しながら ``git-flow`` コマンドを実行してみましょう。
 
-とある新機能を実装することになったので、次のとおりfeatureブランチを作成します。 ``feature`` ブランチには ``feature/`` というプレフィックス名が付きます。
+とある新機能を実装することになったので、次のとおりのコマンドを実行してfeatureブランチを作成します。 ``feature`` ブランチには ``feature/`` というプレフィックス名が付きます。
 
 .. code-block:: console
 
@@ -118,9 +118,10 @@ REAME.txtを作ってコミットしてます。
        git flow feature finish PRJ-123_kato
 
 
-.. tip:: 課題管理システムを利用している場合は新機能のチケット番号+アカウント名などでブランチ名を作成するとよいかもしれません。わかりやすいブランチ名を付けておけば、セントラルにpushしてレビューする場合に有益です。
+.. tip:: 課題管理システムを利用している場合は ``チケット番号 + _ + アカウント名`` などでブランチ名を作成するとよいかもしれません。わかりやすいブランチ名を付けておけば、セントラルにpushしてレビューする場合に有益です。
 
-実際にREADME.txtを変更にコミットします。コミットを2回する理由は後で説明します。
+``git checkout -b feature/PRJ-123_kato`` を行っているイメージです。この時基点となるブランチは``develop``ブランチですが、 ``git flow feature start PRJ-123_kato b1`` などとすれば ``b1`` ブランチを基点にして ``feature`` ブランチを作成することができます。
+それでは、実際にREADME.txtを変更にコミットします。コミットを2回する理由は後で説明します。
 
 .. code-block:: console
 
@@ -151,7 +152,7 @@ featureブランチを終了する
   - Feature branch 'feature/PRJ-123_kato' has been removed
   - You are now on branch 'develop'
 
-``feature/PRJ-123_kato`` ブランチの変更が ``develop`` ブランチにマージされ、削除されたことがわかります。
+このコマンドを実行すると、まず ``git checkout develop`` が実行され ``develop`` ブランチに切り替わります。次に ``git merge --no-ff feature/PRJ-123_kato`` が実行されマージが行われます。 ``--no-ff`` オプションをつけた場合は、 ``feature`` ブランチからマージしたという履歴を残すことができます。
 コミットログを確認します。マージコミットがコミットされて、マージが完了したことが確認できます。
 
 .. code-block:: console
@@ -183,7 +184,7 @@ featureブランチを終了する
         first commit
 
 
-.. tip::  ``feature`` ブランチでのコミットが1つだけの場合に ``git flow feature finish`` コマンドを実行した場合は次のようなコミットになります。つまり、 ``feature`` ブランチが存在しなかったことになってしまいます。 ``finish`` に ``feature`` ブランチも削除されてしまうので、注意が必要です。
+.. tip::  ``feature`` ブランチでのコミットが1つだけの場合に ``git flow feature finish`` コマンドを実行した場合は次のようなコミットログになります。 ``git-flow`` コマンドの仕様ですが、コミットが1つだけの場合は、``git merge --ff feature/PRJ-123_kato`` でマージが行われます。 ``--ff`` オプションでは ``feature`` ブランチの最新コミットが ``develop`` の最新コミットとして扱うfast-forwardマージが行われます。その反対の ``--no-ff`` オプションは、``feature`` ブランチの最新コミットと ``master`` ブランチの最新コミットをマージし新しいコミットを作成するnon-fast-forwardマージです。
 
 .. code-block:: console
 
@@ -258,7 +259,8 @@ releaseブランチを終了する
   - Release branch has been back-merged into 'develop'
 
 
-このコマンドを実行すると、最初に ``release/1.0.0`` ブランチの変更を ``master`` ブランチに取り込むマージが実行されます。次にそのリビジョンでタグを作成します。タグ名はfinishの後に指定したバージョン番号です。次に ``release/1.0.0`` ブランチの変更を ``develop`` ブランチに取り込むマージが実行されます。ログは次のとおりになります。
+このコマンドを実行すると、最初に ``release/1.0.0`` ブランチの変更を ``master`` ブランチに取り込むマージが実行されます。次にそのリビジョンでタグを作成します。タグ名はfinishの後に指定したバージョン番号です。次に ``release/1.0.0`` ブランチの変更を ``develop`` ブランチに取り込むマージが実行されます。この二つのブランチへのマージはリリースブランチからのマージであることをコミットとして残すために ``git merge --no-ff`` で行われます。
+ログは次のとおりになります。
 
 .. code-block:: console
 
@@ -291,15 +293,77 @@ releaseブランチを終了する
   $ git tag -n
   1.0.0           1.0.0 release
 
-
-
 ==========================
 hotfixブランチを開始する
 ==========================
 
+リリースしたプロダクトに不具合が発生する場合があります。そういう時は次のコマンドでhotfixブランチを作成しましょう。
+
+.. code-block:: console
+
+  $ git flow hotfix start 1.0.1
+  Branches 'master' and 'origin/master' have diverged.
+  And local branch 'master' is ahead of 'origin/master'.
+  Switched to a new branch 'hotfix/1.0.1'
+
+  Summary of actions:
+  - A new branch 'hotfix/1.0.1' was created, based on 'master'
+  - You are now on branch 'hotfix/1.0.1'
+
+  Follow-up actions:
+  - Bump the version number now!
+  - Start committing your hot fixes
+  - When done, run:
+
+``hotfix/1.0.1`` というブランチが作成されました。 ``hotfix`` ブランチは ``master`` ブランチが作成されるので、便宜上修正バージョンとして ``1.0.1`` を指定しています。
+
+.. code-block:: console
+
+  $ git branch
+    develop
+  * hotfix/1.0.1
+    master
+
+それでは不具合修正作業を行います。ここではREADME.txtを変更します。
+
+.. code-block:: console
+
+  $ vi README.txt # 不具合修正のために編集
+  $ git add README.txt
+  $ git commit README.txt -m 'bug fix'
+
 ==========================
 hotfixブランチを終了する
 ==========================
+
+不具合修正が完了したら、次のコマンドを実行します。
+コマンドを実行すると、masterブランチに切り替わり、 ``hotfix/1.0.1`` の変更内容を取り込むマージを実行します。そのリビジョンでタグも作成されます。
+次に ``develop`` ブランチに切り替わり、 ``hotfix/1.0.1`` ブランチの変更を ``--no-ff`` でマージします。
+
+.. code-block:: console
+
+  $ git flow hotfix finish 1.0.1
+  Branches 'master' and 'origin/master' have diverged.
+  And local branch 'master' is ahead of 'origin/master'.
+  Switched to branch 'master'
+  Your branch is ahead of 'origin/master' by 5 commits.
+  Merge made by the 'recursive' strategy.
+   README.txt | 3 +--
+   1 file changed, 1 insertion(+), 2 deletions(-)
+  Switched to branch 'develop'
+  Merge made by the 'recursive' strategy.
+   README.txt | 3 +--
+   1 file changed, 1 insertion(+), 2 deletions(-)
+  Deleted branch hotfix/1.0.1 (was ad04c26).
+
+  Summary of actions:
+  - Latest objects have been fetched from 'origin'
+  - Hotfix branch has been merged into 'master'
+  - The hotfix was tagged '1.0.1'
+  - Hotfix branch has been back-merged into 'develop'
+  - Hotfix branch 'hotfix/1.0.1' has been deleted
+
+
 
 .. _git-flow-install-label:
 
