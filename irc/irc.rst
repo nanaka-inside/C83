@@ -16,7 +16,7 @@ Q. IRCって古臭くね？
 
 Q. 画像とか映像とかだめじゃね？
 
-.. image:: images/gununu.*
+.. image:: images/gununu.eps
    :width: 300px
    :alt: ぐぬぬ
    :align: center
