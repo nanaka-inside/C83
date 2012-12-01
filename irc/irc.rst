@@ -11,30 +11,35 @@ Twitter IRC Gatewayでいこう！30分クッキング
 
 これで君も今日からIRC
 
-Q. IRCって古臭くね？
-古いからこそ様々なサポートツール [#irc_jenkins_ci]_ や
+IRCって古臭くね？
 
-Q. 画像とか映像とかだめじゃね？
+古いからこそたいていのプラットフォームにクライアントもあるし、
+様々なサポートツール [#irc_jenkins_ci]_ も対応してたりします。
 
-.. image:: images/gununu.eps
-   :width: 300px
-   :alt: ぐぬぬ
-   :align: center
+画像とか映像とかだめじゃね？
 
-ほ、ほらMacのLimeChatなら画像のURL貼られたらサムネ表示してくれるし（震え声）
+.. figure:: images/gununu.eps
+  :width: 300px
+  :scale: 30%
+  :alt: ぐぬぬ
+  :align: center
+
+  ぐぬぬ
+
+ほ、ほらMacのLimeChatなら画像のURL貼られたらサムネ表示してくれるし…（震え声）
 
 .. [#irc_jenkins_ci] Jenkinsからビルド結果をIRCに通知することもできます
 
 =======================================
  インチキtwitter IRC Gatewayつくるよ！
 =======================================
-今記事ではTwitterへの投稿と自分のタイムラインの表示がIRCクライアントからできるIRCゲートウェイを作ります。
-ちなみにTwitter用のIRCゲートウェイってすでにいっぱいあって、そっちのほうが機能も充実しているので
-使いたいだけなら以下のソフトウェアの方をおすすめしますー。日本人作者ばかりなので検索すれば情報も結構見つかるし。
+閑話休題。今記事ではTwitterへの投稿と自分のタイムラインの表示がIRCクライアントからできるIRCゲートウェイを作ります。
+ちなみにTwitter用のIRCゲートウェイって人気があるのかすでにいくつかあって、そっちのほうが機能も充実しているので
+使いたいだけでしたら以下のソフトウェアの方をおすすめしますー。なぜか日本人作者ばかりなので検索すれば情報も結構見つかるし。
 
-* TwitterIrcGateway ( ``.NET`` ) [#irc_link_twitterircgateway]_
-* tig.rb (net-ircのサンプル) ( ``ruby`` ) [#irc_link_tig]_
-* Another Twitter Irc Gateway ( ``ruby`` ) [#irc_link_atig]_
+* TwitterIrcGateway (.NET) [#irc_link_twitterircgateway]_
+* tig.rb (net-ircのサンプル) (ruby) [#irc_link_tig]_
+* Another Twitter Irc Gateway (ruby) [#irc_link_atig]_
 
 .. [#irc_link_twitterircgateway] http://www.misuzilla.org/Distribution/TweetIrcGateway/
 .. [#irc_link_tig] https://github.com/cho45/net-irc
@@ -48,6 +53,13 @@ Q. 画像とか映像とかだめじゃね？
 
 twitter接続周りは全部コンソール版アプリに、IRC接続周りはgemライブラリに任せちゃって、
 残ったところだけのソースコードならこの短い紙面でも全部載せられるって、痛い、物投げないで、ごめんｎ（ｒｙ
+
+.. figure:: images/irc-limechat.eps
+  :width: 400px
+  :alt: LimeChatで接続したオレオレTwitterIrcGatewayのスクリーンショット
+  :align: center
+
+  LimeChatで接続したオレオレTwitterIrcGatewayのスクリーンショット
 
 ==========
  使用環境
@@ -64,32 +76,45 @@ twitter接続周りは全部コンソール版アプリに、IRC接続周りはg
 ============
  クッキング
 ============
-http://sferik.github.com/t/
-gem install t
+まずTwitterクライアントを用意します。投稿とタイムラインの取得が出来ればなんでも良かったので、"twitter CLI"で検索して出てきた"t"というアプリを使います。
 
-``gem install t``
-``t authorize`` すると、twitter APIの使用申請をするページがブラウザで開くので
+.. figure:: images/irc-t.eps
+  :width: 300px
+  :align: center
+  :scale: 50%
+
+  http://sferik.github.com/t/
+
+rubygemsに登録されているので、インストールは ``gem install t`` と実行するだけ。コマンド名も"t"一文字と非常に覚えやすいです。
+インストールしたら ``t authorize`` すると、twitter APIの使用申請をするページがブラウザで開くので
 慌てず騒がず自分専用アプリの申請をしちゃってください。
-``t`` が言うようにアプリ名は ``<twitterのID>/t`` でつくってみたよ。
+今回は ``t`` が言うようにアプリ名は ``<twitterのID>/t`` でつくってみたよ。
 websiteは自分のtwitterのページに、アプリの説明は「Rubyで書かれたCLIアプリだよ」とか書いておきましょう。
 アプリを作ったあとにSettingsタブからApplication Typeで ``Read, Write and Access direct messages`` を選んでからアプリの更新をするのも忘れずに。
 
 登録するとすぐにConsumer keyとConsumer secretが発行されるので、これをCLIから入力してあげる。
+
 そうするともっかいブラウザが開いてアプリ連携してもいいかという画面が表示され、OKするとPINが発行されるのでこいつをCLIに入力してあげる。
-全部うまく行けばこれでコンソールからtwitterを使う準備は整ったわけだ。
+全部うまく行けばこれでコンソールからtwitterを使う準備は整ったわけだ。ね、簡単でしょ？ [#irc_owattenai]_
+
+.. [#irc_owattenai] まだ何も終わってないです
 
 .. code-block:: bash
 
   $ t stream -N timeline
      @mono_shoo
-     これって私が悪いんだっけ？ float.min → float.min_normal ってあってる? https://t.co/XRWoPGjt …あってる…よなぁ？
+     これって私が悪いんだっけ？ float.min → float.min_normal ってあってる?
+     https://t.co/XRWoPGjt …あってる…よなぁ？
   
      @myrmecoleon
      特撮の三味線
 
   $ t update "ツイート内容"
-
-gemで作るよ
+  
+----------------------------
+ rubygemsプロジェクトの作成
+----------------------------
+今回はrubygems形式で作るよ。gem形式を一から作るのは大変なのでbundlerを使います
 
 .. code-block:: bash
 
@@ -105,29 +130,11 @@ gemで作るよ
         create  stig/lib/stig.rb
         create  stig/lib/stig/version.rb
 
-stig.gemspecをいじります。
+gemプロジェクトができたらstig.gemspecをいじります。
 
-.. code-block:: ruby
-
-  # -*- encoding: utf-8; mode: ruby -*-
-  require File.expand_path('../lib/stig/version', __FILE__)
-  
-  Gem::Specification.new do |gem|
-    gem.authors       = ["mtgto"]
-    gem.email         = ["hogerappa@gmail.com"]
-    gem.description   = %q{TODO: Write a gem description}
-    gem.summary       = %q{TODO: Write a gem summary}
-    gem.homepage      = ""
-  
-    gem.files         = `git ls-files`.split($\)
-    gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
-    gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-    gem.name          = "stig"
-    gem.require_paths = ["lib"]
-    gem.version       = Stig::VERSION
-  
-    gem.add_dependency "net-irc", "~> 0.0.9"
-  end
+.. literalinclude:: stig.gemspec
+  :linenos:
+  :language: ruby
 
 bundle installコマンドを ``stig.gemspec`` と同じディレクトリで実行すると、必要なライブラリ（このプログラムではnet-ircだけ）をインストールしてくれる。
 
@@ -141,17 +148,77 @@ bundle installコマンドを ``stig.gemspec`` と同じディレクトリで実
 
 これで準備が整った。さあプログラムを書いていこう！
 
+-------------
+ lib/stig.rb
+-------------
+
+.. literalinclude:: stig.rb
+  :linenos:
+  :language: ruby
+
+autoloadを一行書いただけです。
+
+--------------------
+ lib/stig/server.rb
+--------------------
+
+.. literalinclude:: server.rb
+  :linenos:
+  :language: ruby
+
+こいつがプログラムのメイン部分。…といっても50行ないんだけど。
+見て分かる人には申し訳ないけど、簡単に解説してみる。
+
+^^^^^^^^^^^^
+def on_user
+^^^^^^^^^^^^
+IRCゲートウェイサーバに新しくユーザが接続してきた時に呼び出されるメソッド。
+ここでは、
+
+* ``#timeline`` チャンネルにユーザを自動JOINさせる (17行目)
+* 別スレッドで"t stream -N timeline"コマンドを実行し、受信した行をパースして1ツイートごとに投稿 (18-38行目)
+
+という２つのことをやる。
+
+^^^^^^^^^^^^^^^^^^^
+def on_disconnected
+^^^^^^^^^^^^^^^^^^^
+ゲートウェイから接続が切れた時に呼び出されるメソッド。
+
+``on_user`` でスレッドをメンバに持っていたのはユーザがIRCゲートウェイから切断された時にタイムラインの取得を止めるためだったという (42行目)。
+
+^^^^^^^^^^^^^^
+def on_privmsg
+^^^^^^^^^^^^^^
+ユーザがメッセージを投げた時に呼び出されるメソッド。
+メッセージの内容を取得して"t update <message>"を実行する (46-47行目)。
+
+他のメソッドは定義してないので、noticeメッセージやらjoinメッセージやらは全部無視される。
+
+--------------------
+ 実行ファイルの作成
+--------------------
+
 最後に実行ファイルを作る。
 ``bin/stig`` (binディレクトリがなかったらmkdirする) を記述する。
 
-.. code-block:: ruby
+.. literalinclude:: stig
+  :linenos:
+  :language: ruby
 
-  puts 'hoge'
+ポート番号は決め打ちで"26667"にしているので、手動で書き換えるかoptparser使って起動時の引数指定できるようにしてもいいと思う。
 
-おわりー！なお、できあがったものがTODO githubのリンク
+おわりー！なお、できあがったものを
+
+** https://github.com/mtgto/stig **
+
+に置いてあるのでコピペするなりなんなりして使ってみてください(´ε｀ )
 
 ==========
  おわりに
 ==========
 gitのリポジトリを作ったところから、タイムラインの取得と投稿が出来る状態になってコミットしたまでの時間が32分でした。
+
 30分くらいでTwitterとIRCを連携できるんだ、簡単だなと思ったのでタイトル詐欺ではない！はず！
+
+IRCは汎用性あってみんなで使ってるとおもしろいよ！それじゃまたね！

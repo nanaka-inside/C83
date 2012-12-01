@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'rubygems'
+  gem 'stig'
+rescue LoadError
+end
+
+require 'stig'
+require 'net/irc'
+
+port = 26667
+
+Net::IRC::Server.new('localhost', port, Stig::Server, {}).start
