@@ -21,7 +21,7 @@ Q. 画像とか映像とかだめじゃね？
    :alt: ぐぬぬ
    :align: center
 
-ほ、ほら
+ほ、ほらMacのLimeChatなら画像のURL貼られたらサムネ表示してくれるし（震え声）
 
 .. [#irc_jenkins_ci] Jenkinsからビルド結果をIRCに通知することもできます
 
