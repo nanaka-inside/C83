@@ -14,14 +14,19 @@ gitとgit-flowの環境を構築したい方は :ref:`git-flow-install-label` �
 git-flowという考え方
 *********************
 
-git-flowについて知るには `git-flowによるブランチの管理`_ を参照しましょう。このサイトでは次のように説明があります。
+git-flowについて知るには `git-flowによるブランチの管理`_ [#git-flow-link]_ を参照しましょう。このサイトでは次のように説明があります。
 
 .. _git-flowによるブランチの管理 : http://www.oreilly.co.jp/community/blog/2011/11/branch-model-with-git-flow.html
+.. [#git-flow-link] http://www.oreilly.co.jp/community/blog/2011/11/branch-model-with-git-flow.html
 
-.. tip:: git-flow は Vincent Driessen 氏によって書かれた `A successful Git branching model`_ (`O-Show 氏による日本語訳`_) というブランチモデルを補助するための git 拡張です。 git-flow を利用する前には、まずこの文章を一読することをおすすめします。 その骨子については、 Voluntas 氏のブログ が参考になります。
+.. topic:: git-flowによるブランチの管理から引用
+
+   git-flow は Vincent Driessen 氏によって書かれた `A successful Git branching model`_ [#git-flow-branching-model]_ (`O-Show 氏による日本語訳`_ [#git-flow-branching-model-ja]_ ) というブランチモデルを補助するための git 拡張です。 git-flow を利用する前には、まずこの文章を一読することをおすすめします。 その骨子については、 Voluntas 氏のブログ が参考になります。
 
 .. _A successful Git branching model : http://nvie.com/posts/a-successful-git-branching-model/
+.. [#git-flow-branching-model] http://nvie.com/posts/a-successful-git-branching-model/
 .. _O-Show 氏による日本語訳 : http://keijinsonyaban.blogspot.jp/2010/10/successful-git-branching-model.html
+.. [#git-flow-branching-model-ja] http://keijinsonyaban.blogspot.jp/2010/10/successful-git-branching-model.html
 
 要するに、Gitブランチをどのように運用するかを決めたガイドラインの一つです。Gitは柔軟性が高く、ブランチをどのように運用するかは開発者の判断に委ねられています。でも、Gitでの運用経験が少ないうちは、お手本となると手法を採用した方が良いかもしれません。そのような場合はgit-flowでのブランチ運用を考えると良いでしょう。
 
@@ -30,9 +35,11 @@ git-flowでは原則的セントラルリポジトリは1つです。それに�
 そのorigin上のmasterブランチの定義ですが、プロダクションリリースのためブランチです。リリースしたらタグ付けもします。masterブランチは安定しているリリース版がコミットされているので、普段の開発ではdevelopブランチを利用します。常に最新の開発版がコミットされているブランチです。リリースの準備ができたらmasterブランチにマージします。リリース前はこのブランチが最新バージョンとなる。これらのメインブランチは常に存在します。
 
 用途に応じて3つブランチがあります。featureブランチとreleaseブランチ、hotfixブランチです。これらのブランチをサポートブランチと呼びます。
-featureブランチ(別名topicブランチ)は新機能を開発するためのブランチです。ある程度の規模の機能を開発する際はこのブランチを使います。
+featureブランチ [#topic-branch]_ は新機能を開発するためのブランチです。ある程度の規模の機能を開発する際はこのブランチを使います。
 releaseブランチはリリースする際の準備を行うためのブランチです。リリースのためのバージョン番号変更、軽微な修正などを反映します。
 hotfixブランチはリリース済みの製品に対してバグフィックなどの修正を反映するためのブランチです。
+
+.. [#topic-branch] 別名トピックブランチという
 
 ***********************
 git-flowコマンドを使う
@@ -50,21 +57,12 @@ git-flowコマンドを使う
 
   $ mkdir sandbox
   $ cd sandbox
-  $ echo "Hello, Git" >  README.txt
+  $ echo "Hello, git-flow" >  README.txt
   $ git init
   $ git add README.txt
   $ git commit README.txt -m 'first commit'
 
-最初のコミットが完了しました。 ``git log`` すると以下のようになります。
-
-.. code-block:: console
-
-  $ git log
-  * commit cc4c19b404abadd6bbee2b0d42b267e8cf239644
-    Author: じゅんいち☆かとう <j5ik2o@gmail.com>
-    Date:   Wed Nov 28 00:38:11 2012 +0900
-
-        first commit
+最初のコミットが完了しました。
 
 次に ``git flow init`` コマンドで初期化を行います。最初のブランチとして ``develop`` ブランチが作成され ``develop`` ブランチに切り替わります( ``git checkout develop`` されます)。 ``-d`` のコマンドラインオプションを指定した場合はデフォルトの引数で初期化されます。
 
@@ -88,6 +86,25 @@ git-flowコマンドを使う
   Hotfix branches? [hotfix/]
   Support branches? [support/]
   Version tag prefix? []
+
+``git log`` すると以下のようにログを確認できます。
+
+.. code-block:: console
+
+  $ git log
+  commit 063d9a556eec98296ba004a7281d2aba5999c2d0
+  Author: じゅんいち☆かとう <j5ik2o@gmail.com>
+  Date:   Sat Dec 1 15:22:21 2012 +0900
+
+      first commit
+
+Atlassian製のSourceTreeを使うともっときれいにログを確認できるので、以後はこのツールの画面でログを確認します。現在は ``master`` と ``develop`` は同じリビジョンを指しています。
+
+.. figure:: git-flow-img/first-commit.eps
+  :scale: 100%
+  :alt: SourceTreeでのリビジョングラフ確認
+  :align: center
+
 
 必要に応じて、リモート上のセントラルリポジトリを設定し、pushします。originのurlは任意のものでよいです。
 
@@ -154,6 +171,8 @@ featureブランチを終了する
 
 このコマンドを実行すると、まず ``git checkout develop`` が実行され ``develop`` ブランチに切り替わります。次に ``git merge --no-ff feature/PRJ-123_kato`` が実行されマージが行われます。 ``--no-ff`` オプションをつけた場合は、 ``feature`` ブランチからマージしたという履歴を残すことができます。
 コミットログを確認します。マージコミットがコミットされて、マージが完了したことが確認できます。
+
+TODO SourceTreeのキャプチャで説明した方がわかりやすい
 
 .. code-block:: console
 
@@ -262,6 +281,9 @@ releaseブランチを終了する
 このコマンドを実行すると、最初に ``release/1.0.0`` ブランチの変更を ``master`` ブランチに取り込むマージが実行されます。次にそのリビジョンでタグを作成します。タグ名はfinishの後に指定したバージョン番号です。次に ``release/1.0.0`` ブランチの変更を ``develop`` ブランチに取り込むマージが実行されます。この二つのブランチへのマージはリリースブランチからのマージであることをコミットとして残すために ``git merge --no-ff`` で行われます。
 ログは次のとおりになります。
 
+
+TODO SourceTreeのキャプチャで説明した方がわかりやすい
+
 .. code-block:: console
 
   *   commit 697df60130e06a39d25c1551d6b70100608623a0
@@ -293,6 +315,7 @@ releaseブランチを終了する
   $ git tag -n
   1.0.0           1.0.0 release
 
+
 ==========================
 hotfixブランチを開始する
 ==========================
@@ -315,6 +338,7 @@ hotfixブランチを開始する
   - Start committing your hot fixes
   - When done, run:
 
+
 ``hotfix/1.0.1`` というブランチが作成されました。 ``hotfix`` ブランチは ``master`` ブランチが作成されるので、便宜上修正バージョンとして ``1.0.1`` を指定しています。
 
 .. code-block:: console
@@ -324,6 +348,7 @@ hotfixブランチを開始する
   * hotfix/1.0.1
     master
 
+
 それでは不具合修正作業を行います。ここではREADME.txtを変更します。
 
 .. code-block:: console
@@ -332,13 +357,12 @@ hotfixブランチを開始する
   $ git add README.txt
   $ git commit README.txt -m 'bug fix'
 
+
 ==========================
 hotfixブランチを終了する
 ==========================
 
 不具合修正が完了したら、次のコマンドを実行します。
-コマンドを実行すると、masterブランチに切り替わり、 ``hotfix/1.0.1`` の変更内容を取り込むマージを実行します。そのリビジョンでタグも作成されます。
-次に ``develop`` ブランチに切り替わり、 ``hotfix/1.0.1`` ブランチの変更を ``--no-ff`` でマージします。
 
 .. code-block:: console
 
@@ -363,6 +387,31 @@ hotfixブランチを終了する
   - Hotfix branch has been back-merged into 'develop'
   - Hotfix branch 'hotfix/1.0.1' has been deleted
 
+コマンドを実行すると、masterブランチに切り替わり、 ``hotfix/1.0.1`` の変更内容を取り込むマージを実行します。そのリビジョンでタグも作成されます。次に ``develop`` ブランチに切り替わり、 ``hotfix/1.0.1`` ブランチの変更を ``--no-ff`` でマージします。
+ログは次のとおりになります。
+TODO SourceTreeのキャプチャで説明した方がわかりやすい
+
+.. code-block:: console
+
+  *   commit ad325d409820707954bb2982af112f73c1a6b198
+  |\  Merge: 697df60 ad04c26
+  | | Author: Junichi Kato <j5ik2o@gmail.com>
+  | | Date:   Fri Nov 30 17:50:01 2012 +0900
+  | |
+  | |     Merge branch 'hotfix/1.0.1' into develop
+  | |
+  | * commit ad04c266247e75912644b8ec5952c0b606fb14e7
+  | | Author: Junichi Kato <j5ik2o@gmail.com>
+  | | Date:   Fri Nov 30 17:49:25 2012 +0900
+  | |
+  | |     bug fix
+  | |
+  | *   commit 03bfbdf35f9bca4527d3e7bb8e0a749d914430a1
+  | |\  Merge: cc4c19b 5b69f4d
+  | | | Author: じゅんいち☆かとう <j5ik2o@gmail.com>
+  | | | Date:   Wed Nov 28 14:37:07 2012 +0900
+  | | |
+  | | |     Merge branch 'release/1.0.0'
 
 
 .. _git-flow-install-label:
