@@ -32,6 +32,10 @@ git-flowについて知るには `git-flowによるブランチの管理`_ [#git
 
 要するに、Gitブランチをどのように運用するかを決めたガイドラインの一つです。Gitは柔軟性が高く、ブランチをどのように運用するかは開発者の判断に委ねられています。でも、Gitでの運用経験が少ないうちは、お手本となると手法を採用した方が良いかもしれません。そのような場合はgit-flowでのブランチ運用を考えると良いでしょう。
 
+================
+ブランチの種類
+================
+
 git-flowでは原則的セントラルリポジトリは1つです。それに伴いorigin上のmasterも唯一無二ということになります。
 
 そのorigin上のmasterブランチの定義ですが、プロダクションリリースのためブランチです。リリースしたらタグ付けもします。masterブランチは安定しているリリース版がコミットされているので、普段の開発ではdevelopブランチを利用します。常に最新の開発版がコミットされているブランチです。リリースの準備ができたらmasterブランチにマージします。リリース前はこのブランチが最新バージョンとなる。これらのメインブランチは常に存在します。
@@ -102,7 +106,9 @@ git-flowコマンドを使う
 
       first commit
 
-Atlassian製のSourceTreeを使うともっときれいにログを確認できるので、以後はこのツールの画面でログを確認します。現在は ``master`` と ``develop`` は同じリビジョンを指しています。
+Atlassian製のSourceTree [#source-tree]_ を使うともっときれいにログを確認できるので、以後はこのツールの画面でログを確認します。現在は ``master`` と ``develop`` は同じリビジョンを指しています。
+
+.. [#source-tree] 分散バージョン管理システム Git や Mercurial 用の強力な無料 Mac クライアントです。AppStoreから簡単にインストールできます。Windowsの人ごめんなさい... http://www.atlassian.com/ja/software/sourcetree/overview
 
 .. figure:: git-flow-img/first-commit.eps
   :scale: 100%
@@ -220,9 +226,9 @@ releaseブランチを開始する
 
 .. code-block:: console
 
-  $ vi README.txt # リリースのために編集
+  $ echo "version: 1.0.0" >> README.txt
   $ git add README.txt
-  $ git commit README.txt -m 'first release'
+  $ git commit README.txt -m 'version up'
 
 
 ==========================
@@ -255,30 +261,10 @@ releaseブランチを終了する
 ログは次のとおりになります。
 
 
-TODO SourceTreeのキャプチャで説明した方がわかりやすい
-
-.. code-block:: console
-
-  *   commit 697df60130e06a39d25c1551d6b70100608623a0
-  |\  Merge: dfea61e 5b69f4d
-  | | Author: じゅんいち☆かとう <j5ik2o@gmail.com>
-  | | Date:   Wed Nov 28 14:37:21 2012 +0900
-  | |
-  | |     Merge branch 'release/1.0.0' into develop
-  | |
-  | * commit 5b69f4d0ff619579f5bc44b5b0aab9636a510652
-  |/  Author: じゅんいち☆かとう <j5ik2o@gmail.com>
-  |   Date:   Wed Nov 28 14:35:12 2012 +0900
-  |
-  |       first release
-  |
-  *   commit dfea61e1d30e1079f51240c9aa3e54d8729771ec
-  |\  Merge: cc4c19b f7f0e6d
-  | | Author: じゅんいち☆かとう <j5ik2o@gmail.com>
-  | | Date:   Wed Nov 28 01:04:49 2012 +0900
-  | |
-  | |     Merge branch 'feature/PRJ-123_kato' into develop
-  | |
+.. figure:: git-flow-img/release-finish.eps
+  :scale: 100%
+  :alt: release-finish
+  :align: center
 
 
 作成されたタグは次のコマンドで確認できます。
@@ -287,7 +273,6 @@ TODO SourceTreeのキャプチャで説明した方がわかりやすい
 
   $ git tag -n
   1.0.0           1.0.0 release
-
 
 ==========================
 hotfixブランチを開始する
@@ -362,29 +347,11 @@ hotfixブランチを終了する
 
 コマンドを実行すると、masterブランチに切り替わり、 ``hotfix/1.0.1`` の変更内容を取り込むマージを実行します。そのリビジョンでタグも作成されます。次に ``develop`` ブランチに切り替わり、 ``hotfix/1.0.1`` ブランチの変更を ``--no-ff`` でマージします。
 ログは次のとおりになります。
-TODO SourceTreeのキャプチャで説明した方がわかりやすい
 
-.. code-block:: console
-
-  *   commit ad325d409820707954bb2982af112f73c1a6b198
-  |\  Merge: 697df60 ad04c26
-  | | Author: Junichi Kato <j5ik2o@gmail.com>
-  | | Date:   Fri Nov 30 17:50:01 2012 +0900
-  | |
-  | |     Merge branch 'hotfix/1.0.1' into develop
-  | |
-  | * commit ad04c266247e75912644b8ec5952c0b606fb14e7
-  | | Author: Junichi Kato <j5ik2o@gmail.com>
-  | | Date:   Fri Nov 30 17:49:25 2012 +0900
-  | |
-  | |     bug fix
-  | |
-  | *   commit 03bfbdf35f9bca4527d3e7bb8e0a749d914430a1
-  | |\  Merge: cc4c19b 5b69f4d
-  | | | Author: じゅんいち☆かとう <j5ik2o@gmail.com>
-  | | | Date:   Wed Nov 28 14:37:07 2012 +0900
-  | | |
-  | | |     Merge branch 'release/1.0.0'
+.. figure:: git-flow-img/hotfix-finish.eps
+  :scale: 100%
+  :alt: release-finish
+  :align: center
 
 
 .. _git-flow-install-label:
