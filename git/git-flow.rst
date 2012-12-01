@@ -4,11 +4,13 @@ git-flow入門
 
 こんにちは ``@j5ik2o`` です。
 
-開発の現場でバージョン管理を導入する際に、Subversion(以下、SVN)よりGitを採用しようという話を聞きます。また、GitのホスティングサービスであるGithub [#f1]_ にアカウントを持っているエンジニアも増えています。この機運の高まりからわかるように、これからはGitです。Gitが普通に使えるエンジニアがイケてるエンジニアですね！
+開発の現場でバージョン管理を導入する際に、Subversion(以下、SVN)よりGitを採用しようという話を聞きます。また、GitのホスティングサービスであるGithub [#github]_ にアカウントを持っているエンジニアも増えています。この機運の高まりからわかるように、これからはGitです。Gitが普通に使えるエンジニアがイケてるエンジニアですね！
 
 さて、Git入門系の書籍やブログなりの情報は、検索すればたくさん出てくるのでここでは触れずに、Gitにある程度慣れてきたがGitのブランチをどのようなルールで運用したらいいのかというテーマで、git-flowという考え方を取り上げて解説したいとおもいます。
 
 gitとgit-flowの環境を構築したい方は :ref:`git-flow-install-label` を参照してください。
+
+.. [#github] https://github.com/
 
 *********************
 git-flowという考え方
@@ -64,7 +66,9 @@ git-flowコマンドを使う
 
 最初のコミットが完了しました。
 
-次に ``git flow init`` コマンドで初期化を行います。最初のブランチとして ``develop`` ブランチが作成され ``develop`` ブランチに切り替わります( ``git checkout develop`` されます)。 ``-d`` のコマンドラインオプションを指定した場合はデフォルトの引数で初期化されます。
+次に ``git flow init`` コマンドで初期化を行います。最初のブランチとして ``develop`` ブランチが作成され ``develop`` ブランチに切り替わります( ``git checkout -b develop`` 相当 [#nearly_eq_cmd]_)。 ``-d`` のコマンドラインオプションを指定した場合はデフォルトの引数で初期化されます。
+
+.. [#nearly_eq_cmd] 厳密には異なりますが、イメージをつかみやすくするためのgitコマンドです。
 
 .. code-block:: console
 
@@ -92,9 +96,9 @@ git-flowコマンドを使う
 .. code-block:: console
 
   $ git log
-  commit 063d9a556eec98296ba004a7281d2aba5999c2d0
-  Author: じゅんいち☆かとう <j5ik2o@gmail.com>
-  Date:   Sat Dec 1 15:22:21 2012 +0900
+  commit 41f033f4e4ef82666a207b33e4d0e62d2c5887c0
+  Author: Junichi Kato <j5ik2o@gmail.com>
+  Date:   Sat Dec 1 18:02:09 2012 +0900
 
       first commit
 
@@ -106,7 +110,7 @@ Atlassian製のSourceTreeを使うともっときれいにログを確認でき�
   :align: center
 
 
-必要に応じて、リモート上のセントラルリポジトリを設定し、pushします。originのurlは任意のものでよいです。
+必要に応じて、リモート上のセントラルリポジトリを設定し、pushします。originにはGithubなどの自分で用意したリモートリポジトリを指定します。
 
 .. code-block:: console
 
@@ -119,7 +123,7 @@ Atlassian製のSourceTreeを使うともっときれいにログを確認でき�
 
 それでは実際にブランチを作成しながら ``git-flow`` コマンドを実行してみましょう。
 
-とある新機能を実装することになったので、次のとおりのコマンドを実行してfeatureブランチを作成します。 ``feature`` ブランチには ``feature/`` というプレフィックス名が付きます。
+とある新機能を実装することになったので、次のとおりのコマンドを実行してfeatureブランチを作成します( ``git checkout -b feature/PRJ-123_kato`` 相当)。 ``feature`` ブランチには ``feature/`` というプレフィックス名が付きます。これは ``git flow init`` で指定したプレフィックス名が付加されます。他のサポートブランチにも同様に付加されます。
 
 .. code-block:: console
 
@@ -137,7 +141,8 @@ Atlassian製のSourceTreeを使うともっときれいにログを確認でき�
 
 .. tip:: 課題管理システムを利用している場合は ``チケット番号 + _ + アカウント名`` などでブランチ名を作成するとよいかもしれません。わかりやすいブランチ名を付けておけば、セントラルにpushしてレビューする場合に有益です。
 
-``git checkout -b feature/PRJ-123_kato`` を行っているイメージです。この時基点となるブランチは``develop``ブランチですが、 ``git flow feature start PRJ-123_kato b1`` などとすれば ``b1`` ブランチを基点にして ``feature`` ブランチを作成することができます。
+このコマンドライン引数の指定では、基点となるブランチは ``develop`` ブランチですが、 ``git flow feature start PRJ-123_kato b1`` などとすれば ``b1`` ブランチを基点にして ``feature`` ブランチを作成することもできます。
+
 それでは、実際にREADME.txtを変更にコミットします。コミットを2回する理由は後で説明します。
 
 .. code-block:: console
@@ -153,7 +158,7 @@ Atlassian製のSourceTreeを使うともっときれいにログを確認でき�
 featureブランチを終了する
 ===========================
 
-ブランチでの作業が終わったので次のコマンドを実行してdevelopにマージします。
+ブランチでの作業が終わったので次のコマンドを実行して ``develop`` にマージします。
 
 .. code-block:: console
 
@@ -172,59 +177,27 @@ featureブランチを終了する
 このコマンドを実行すると、まず ``git checkout develop`` が実行され ``develop`` ブランチに切り替わります。次に ``git merge --no-ff feature/PRJ-123_kato`` が実行されマージが行われます。 ``--no-ff`` オプションをつけた場合は、 ``feature`` ブランチからマージしたという履歴を残すことができます。
 コミットログを確認します。マージコミットがコミットされて、マージが完了したことが確認できます。
 
-TODO SourceTreeのキャプチャで説明した方がわかりやすい
+.. figure:: git-flow-img/feature-finish.eps
+  :scale: 100%
+  :alt: SourceTreeでのリビジョングラフ確認
+  :align: center
 
-.. code-block:: console
+``feature`` ブランチでのコミットが1つだけ存在した状態で、 ``git flow feature finish`` コマンドを実行すると次のようなログになってしまうので注意が必要です。``git-flow`` コマンドの仕様なので仕方ありません。
 
-  $ git log --graph
-  *   commit dfea61e1d30e1079f51240c9aa3e54d8729771ec
-  |\  Merge: cc4c19b f7f0e6d
-  | | Author: じゅんいち☆かとう <j5ik2o@gmail.com>
-  | | Date:   Wed Nov 28 01:04:49 2012 +0900
-  | |
-  | |     Merge branch 'feature/PRJ-123_kato' into develop
-  | |
-  | * commit f7f0e6d4f0ce56a27122e87879cffaca43b4e911
-  | | Author: じゅんいち☆かとう <j5ik2o@gmail.com>
-  | | Date:   Wed Nov 28 01:04:40 2012 +0900
-  | |
-  | |     bbbbb追加
-  | |
-  | * commit 7387073ccb80243c42e9c93f93fa88ab9f96ed4e
-  |/  Author: じゅんいち☆かとう <j5ik2o@gmail.com>
-  |   Date:   Wed Nov 28 01:04:22 2012 +0900
-  |
-  |       aaaaa追加
-  |
-  * commit cc4c19b404abadd6bbee2b0d42b267e8cf239644
-    Author: じゅんいち☆かとう <j5ik2o@gmail.com>
-    Date:   Wed Nov 28 00:38:11 2012 +0900
+.. tip::
+   finishの際にコミットが1つだけの場合は、 ``git merge --ff feature/PRJ-123_kato`` でマージが行われます。 ``--ff`` オプションがつくマージ( ``fast-forward`` マージ)では ``feature`` ブランチの最新コミットが ``develop`` の最新コミットになってしまうのでこのような現象が発生します。
+   その反対の ``--no-ff`` オプションがつくマージ( ``non-fast-forward`` マージ)は、 ``feature`` ブランチの最新コミットと ``master`` ブランチの最新コミットをマージした新しいコミットを作成します。
 
-        first commit
-
-
-.. tip::  ``feature`` ブランチでのコミットが1つだけの場合に ``git flow feature finish`` コマンドを実行した場合は次のようなコミットログになります。 ``git-flow`` コマンドの仕様ですが、コミットが1つだけの場合は、``git merge --ff feature/PRJ-123_kato`` でマージが行われます。 ``--ff`` オプションでは ``feature`` ブランチの最新コミットが ``develop`` の最新コミットとして扱うfast-forwardマージが行われます。その反対の ``--no-ff`` オプションは、``feature`` ブランチの最新コミットと ``master`` ブランチの最新コミットをマージし新しいコミットを作成するnon-fast-forwardマージです。
-
-.. code-block:: console
-
-  * commit 7387073ccb80243c42e9c93f93fa88ab9f96ed4e
-  |  Author: じゅんいち☆かとう <j5ik2o@gmail.com>
-  |  Date:   Wed Nov 28 01:04:22 2012 +0900
-  |
-  |     aaaaa追加
-  |
-  * commit cc4c19b404abadd6bbee2b0d42b267e8cf239644
-    Author: じゅんいち☆かとう <j5ik2o@gmail.com>
-    Date:   Wed Nov 28 00:38:11 2012 +0900
-
-        first commit
-
+.. figure:: git-flow-img/ff-merge.eps
+  :scale: 100%
+  :alt: 1つのコミットの場合はff-mergeになる
+  :align: center
 
 ==========================
 releaseブランチを開始する
 ==========================
 
-あなたはついにリリースの時を迎えました。リリース準備を行うため次のコマンドを実行して ``release`` ブランチを作成します。``start`` の後ろにはリリース番号を指定します。
+あなたはついにリリースの時を迎えました。リリース準備を行うため次のコマンドを実行して ``release`` ブランチを作成します。 ``start`` の後ろにはリリース番号を指定します。
 
 .. code-block:: console
 
@@ -428,7 +401,9 @@ Windows編
 gitをインストールする
 ----------------------
 
-msysgit [#f2]_ からダウンロードしインストールする。 次のコマンドを実行しバージョンが確認できたらインストール完了。
+msysgit [#msysgit]_ からダウンロードしインストールする。 次のコマンドを実行しバージョンが確認できたらインストール完了。
+
+.. [#msysgit] http://code.google.com/p/msysgit/downloads/list?q=full+installer+official+git
 
 .. code-block:: console
 
@@ -453,7 +428,7 @@ git-flowをインストールする
 ---------------------------
 
 .. note:: その前に getopt と libinit3.ddl をインストールする。
-   util-linux-ng for Windows [#f3]_ から「Complete package,  except sources」のリンクからダウンロードする。例えばデフォルトの「C:\Program Files (x86)\GnuWin32」にインストールしたら、その中の「bin\getopt.exe」と「bin\libintl3.ddl」をmsysgit のインストールディレクトリのbin、デフォルトだったら「C:\Program Files (x86)\Git\bin」にコピーする。
+   util-linux-ng for Windows から「Complete package,  except sources」のリンクからダウンロードする。例えばデフォルトの「C:\Program Files (x86)\GnuWin32」にインストールしたら、その中の「bin\getopt.exe」と「bin\libintl3.ddl」をmsysgit のインストールディレクトリのbin、デフォルトだったら「C:\Program Files (x86)\Git\bin」にコピーする。
 
 githubからgit-flowのリポジトリとクローンする。
 
@@ -461,7 +436,7 @@ githubからgit-flowのリポジトリとクローンする。
 
    C:\temp> git clone git://github.com/nvie/gitflow.git
 
-shFlags [#f3]_ も取得する。
+shFlagsも取得する。
 
 .. code-block:: console
 
@@ -515,6 +490,3 @@ homebrewからgit-flowをインストールする。
 
 .. rubric:: 脚注
 
-.. [#f1] https://github.com/
-.. [#f2] http://code.google.com/p/msysgit/downloads/list?q=full+installer+official+git
-.. [#f3] コマンドラインを解析するためのライブラリ。
