@@ -17,10 +17,9 @@ Contents:
    git/git-jenkins-sphinx.rst
    git/jenkins.rst
    chuross-dropbox/android-mff.rst
-
+   irc/irc.rst
    coreutils/coreutils.rst
 .. postgres/postgres-random.rst
-
 
 Indices and tables
 ==================
