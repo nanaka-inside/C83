@@ -17,9 +17,11 @@ git-flowという考え方
 *********************
 
 git-flowについて知るには `git-flowによるブランチの管理`_ [#git-flow-link]_ を参照しましょう。このサイトでは次のように説明があります。
+要するに、Gitブランチをどのように運用するかを決めたイケてるガイドラインの一つです。[#guide-line]_
 
 .. _git-flowによるブランチの管理 : http://www.oreilly.co.jp/community/blog/2011/11/branch-model-with-git-flow.html
 .. [#git-flow-link] http://www.oreilly.co.jp/community/blog/2011/11/branch-model-with-git-flow.html
+.. [#guide-line] ブランチモデルのデザインパターンの一つぐらいで考えてもらったらいいと思います。こんなパターンはクソだと思う人は既存パターンを改良したり新しくパターンを作ればよいのです。
 
 .. topic:: git-flowによるブランチの管理から引用
 
@@ -30,7 +32,6 @@ git-flowについて知るには `git-flowによるブランチの管理`_ [#git
 .. _O-Show 氏による日本語訳 : http://keijinsonyaban.blogspot.jp/2010/10/successful-git-branching-model.html
 .. [#git-flow-branching-model-ja] http://keijinsonyaban.blogspot.jp/2010/10/successful-git-branching-model.html
 
-要するに、Gitブランチをどのように運用するかを決めたガイドラインの一つです。Gitは柔軟性が高く、ブランチをどのように運用するかは開発者の判断に委ねられています。でも、Gitでの運用経験が少ないうちは、お手本となると手法を採用した方が良いかもしれません。そのような場合は ``git-flow`` でのブランチ運用を考えると良いでしょう。
 
 ================
 ブランチの種類
@@ -286,7 +287,7 @@ releaseブランチを終了する
   - Release branch has been back-merged into 'develop'
 
 
-このコマンドを実行すると、最初に ``release/1.0.0`` ブランチの変更を ``master`` ブランチに取り込むマージが実行されます。次にそのリビジョンでタグを作成します。タグ名はfinishの後に指定したバージョン番号です。次に ``release/1.0.0`` ブランチの変更を ``develop`` ブランチに取り込むマージが実行されます。この二つのブランチへのマージはリリースブランチからのマージであることをコミットとして残すために ``git merge --no-ff`` で行われます。
+このコマンドを実行すると、最初に ``release/1.0.0`` ブランチの変更を ``master`` ブランチに取り込むマージが実行されます(``git checkout master; git merge --no-ff release/1.0.0`` 相当)。次にそのリビジョンでタグを作成します(``git tag 1.0.0`` 相当)。タグ名はfinishの後に指定したバージョン番号です。次に ``release/1.0.0`` ブランチの変更を ``develop`` ブランチに取り込むマージが実行されます(``git checkout develop; git merge --no-ff release/1.0.0`` 相当)。最後の ``release/1.0.0`` ブランチを削除します。
 ログは次のとおりになります。
 
 .. figure:: git-flow-img/release-finish.eps
@@ -294,13 +295,14 @@ releaseブランチを終了する
   :alt: release-finish
   :align: center
 
-
-作成されたタグは次のコマンドで確認できます。
+作成されたタグ [#git-tag]_ は次のコマンドで確認できます。
 
 .. code-block:: console
 
   $ git tag -n
   1.0.0           1.0.0 release
+
+.. [#git-tag] finish時にタグに注釈を付加できます。 ``git tag -n`` の ``-n`` オプションはその注釈も表示するオプションです。
 
 ==========================
 hotfixブランチを開始する
@@ -334,16 +336,6 @@ hotfixブランチを開始する
     master
 
 
-``hotfix`` ブランチは ``master`` ブランチが作成されるので、便宜上修正バージョンとして ``1.0.1`` を指定しています。
-
-.. code-block:: console
-
-  $ git branch
-    develop
-  * hotfix/1.0.1
-    master
-
-
 それでは不具合修正作業を行います。ここでは ``README.txt`` を変更します。
 
 .. code-block:: console
@@ -357,8 +349,7 @@ hotfixブランチを開始する
 hotfixブランチを終了する
 ==========================
 
-不具合修正が完了したら、次のコマンドを実行します。
-コマンドを実行すると、masterブランチに切り替わり、 ``hotfix/1.0.1`` の変更内容を取り込むマージを実行します。そのリビジョンでタグも作成されます。次に ``develop`` ブランチに切り替わり、 ``hotfix/1.0.1`` ブランチの変更を ``--no-ff`` でマージします。
+不具合修正が完了したら、次のコマンドを実行して ``master`` ブランチと ``develop`` にマージします。
 
 .. code-block:: console
 
@@ -383,6 +374,7 @@ hotfixブランチを終了する
   - Hotfix branch has been back-merged into 'develop'
   - Hotfix branch 'hotfix/1.0.1' has been deleted
 
+コマンドを実行すると、 ``master`` ブランチに切り替わり、 ``hotfix/1.0.1`` の変更内容を取り込むマージを実行します。そのリビジョンでタグも作成されます(``git checkout master; git merge --no-ff hotfix/1.0.1`` 相当)。次に ``develop`` ブランチに切り替わり、 ``hotfix/1.0.1`` ブランチの変更をマージします(``git checkout develop; git merge --no-ff hotfix/1.0.1`` 相当)。最後に ``hotfix/1.0.0`` ブランチを削除します。
 ログは次のとおりになります。
 
 .. figure:: git-flow-img/hotfix-finish.eps
@@ -390,11 +382,20 @@ hotfixブランチを終了する
   :alt: release-finish
   :align: center
 
+作成されたタグは次のコマンドで確認できます。
+
+.. code-block:: console
+
+  $ git tag -n
+  1.0.0           release 1.0.0
+  1.0.1           hotfix release 1.0.1
+
+
 ******************************
 おわりに
 ******************************
 
-``git-flow`` コマンドというツールを利用しなくても、
+Gitは柔軟性が高く、ブランチをどのように運用するかは開発者の判断に委ねられています。でも、Gitでの運用経験が少ないうちは、お手本となると手法を採用した方が良いかもしれません。そのような場合は 手始めに ``git-flow`` というブランチモデルを試してみるとよいと思います。
 
 
 .. _git-flow-install-label:
