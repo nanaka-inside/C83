@@ -358,6 +358,7 @@ hotfixブランチを終了する
 ==========================
 
 不具合修正が完了したら、次のコマンドを実行します。
+コマンドを実行すると、masterブランチに切り替わり、 ``hotfix/1.0.1`` の変更内容を取り込むマージを実行します。そのリビジョンでタグも作成されます。次に ``develop`` ブランチに切り替わり、 ``hotfix/1.0.1`` ブランチの変更を ``--no-ff`` でマージします。
 
 .. code-block:: console
 
@@ -382,7 +383,6 @@ hotfixブランチを終了する
   - Hotfix branch has been back-merged into 'develop'
   - Hotfix branch 'hotfix/1.0.1' has been deleted
 
-コマンドを実行すると、masterブランチに切り替わり、 ``hotfix/1.0.1`` の変更内容を取り込むマージを実行します。そのリビジョンでタグも作成されます。次に ``develop`` ブランチに切り替わり、 ``hotfix/1.0.1`` ブランチの変更を ``--no-ff`` でマージします。
 ログは次のとおりになります。
 
 .. figure:: git-flow-img/hotfix-finish.eps
