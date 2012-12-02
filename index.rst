@@ -19,6 +19,7 @@ Contents:
    chuross-dropbox/android-mff.rst
    irc/irc.rst
    coreutils/coreutils.rst
+   coreutils/coreutils-2.rst
 .. postgres/postgres-random.rst
 
 Indices and tables
