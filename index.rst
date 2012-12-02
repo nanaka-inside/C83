@@ -12,10 +12,12 @@ Contents:
    :maxdepth: 4
    :numbered:
 
+   first.rst
    git/git.rst
    git/git-flow.rst
    git/git-jenkins-sphinx.rst
    git/jenkins.rst
+   second.rst
    chuross-dropbox/android-mff.rst
    irc/irc.rst
    coreutils/coreutils.rst

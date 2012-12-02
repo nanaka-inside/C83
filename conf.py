@@ -184,7 +184,15 @@ latex_elements = {
   #\\global\\@topnum\\z@\n\
   #\\secdef\\@chapter\\@schapter}\n\
 #\\makeatother',
-
+'preamble': u"""\pagenumbering{arabic}
+\\pagestyle{fancy}
+\\lhead[\\rightmark]{}
+\\chead[]{}
+\\rhead[]{\\rightmark}
+\\lfoot[ななか +inside press ◆ \\thepage]{}
+\\cfoot[]{}
+\\rfoot[]{ななか +inside press ◆ \\thepage}
+""",
 'classoptions': ',twoside',
 'babel': '\\usepackage[english]{babel}'
 
@@ -194,7 +202,7 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'Nanaka-inside-c83.tex', u'ななかInside Press vol.2',
-   u'j5ik2o and mtgto and chuross and tboffice and ijust', 'manual'),
+   u'j5ik2o and mtgto and chuross and tboffice and ijust', 'howto'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -204,7 +212,7 @@ latex_documents = [
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
 #latex_use_parts = False
-#latex_use_parts = True
+latex_use_parts = True
 
 # If true, show page references after internal links.
 #latex_show_pagerefs = False
@@ -220,8 +228,8 @@ latex_documents = [
 
 # add by tboffice 2012-11-27
 #latex_docclass = {'manual':'jarticle'}
-latex_docclass = {"howto": "jsarticle", "manual": "jsarticle"}
-#latex_docclass = {"howto": "jsarticle", "manual": "jsbook"}
+#latex_docclass = {"howto": "jsarticle", "manual": "jsarticle"}
+latex_docclass = {"howto": "jsarticle", "manual": "jsbook"}
 
 # -- Options for manual page output --------------------------------------------
 
