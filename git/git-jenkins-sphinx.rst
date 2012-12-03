@@ -46,7 +46,7 @@ Git + Jenkins + Sphinxでドキュメント生成
 
 .. [#gjs-cha] こんなキャラじゃないです念のため
 
-そんな感じで、誰かがこけると誰かの作業が止まるという非常によろしくない環境でした。githubでドキュメントを管理していましたが、ファイルの置き場と化していました。
+誰かがこけると誰かの作業が止まるという非常によろしくない環境でした。githubでドキュメントを管理していましたが、ファイルの置き場と化していました。
 
 
 
@@ -66,20 +66,21 @@ Git + Jenkins + Sphinxでドキュメント生成
 *****************
 
 まえがき終わりです [#gjs-e]_ [#gjs-ee]_ 。
-今回、Sphinx(スフィンクス) を使って誌面を作ろうということになりました。Sphinxは、python製のドキュメントビルダーです。rst(reStructuredText)形式 [#gjs-rst]_ で書かれたプレーンテキストを用意します。そのファイルを、コマンドラインからmakeします。make時のオプションで、HTML形式やepub形式といったドキュメントへ変換できます。前号で使っていたLaTeX(dvipdfmx)環境があったのでそれをそのまま流用し、LaTeXを経由して入稿用のpdfを出力します。
+今回、Sphinx(スフィンクス) を使って誌面を作ろうということになりました。Sphinxは、python製のドキュメントビルダーです。rst(reStructuredText)形式 [#gjs-rst]_ で書かれたプレーンテキストを用意します。そのファイルを、コマンドラインからmakeします [#gjs-sm]_ 。make時のオプションで、HTML形式やepub形式といったドキュメントへ変換できます。前号で使っていたLaTeX(dvipdfmx)環境があったのでそれをそのまま流用し、LaTeXを経由して入稿用のpdfを出力します。
 
 .. [#gjs-zengou] コミックマーケット82で頒布した、「ななかInside Press 夏」のことです
 .. [#gjs-e] えっ
 .. [#gjs-ee] えっ
 .. [#gjs-rst] markdownやwiki記法に似ていないこともないマークアップ言語
+.. [#gjs-sm] makeするまえに、 sphinx-quickstartというコマンドでひな形のドキュメントを作成しておきましょう
 
 
 仕組み
 ======
 #. できあがったrstファイルをgithubにpush
 #. Jenkinsが1分に1回ポーリングしていて、pushされたことを検知したら次へ
-#. Jenkinsが指定されたsphinxのmakeコマンドを実行
-#. makeコマンドの結果をJenkinsが取り込んで、ビルド成功/失敗を表示
+#. Jenkinsが指定されたコマンドを実行
+#. コマンドの結果をJenkinsが取り込んで、ビルド成功/失敗を表示
 #. ビルドに成功していればpdfができている！
 #. ついでにビルド成功/失敗の記録がJenkinsに残っている
 
@@ -137,19 +138,12 @@ tomcatを起動
    # sh start.sh
 
 
-デフォルトでは8080ポートで起動するのでアクセスしてみましょう [#gjs-port]_ [#gjs-jen-dir]_ [#gjs-tomcat-root]_ [#gjs-tomcat-stop]_ [#gjs-tomcat-stop2]_ [#gjs-nanndekonnna]_ 。
+デフォルトでは8080ポートで起動するのでアクセスしてみましょう。 [#gjs-tomcatp]_ [#gjs-port]_ [#gjs-jen-dir]_ [#gjs-tomcat-root]_ [#gjs-tomcat-stop]_ [#gjs-tomcat-stop2]_ [#gjs-nanndekonnna]_ 。
 
-.. figure:: img/start-tomcat.eps
-  :scale: 100%
-  :alt: tomcatの起動画面
-  :align: center
-
-  **tomcatの起動画面**
-
-
+.. [#gjs-tomcatp] If you're seeing this, you've successfully installed Tomcat. Congratulations! と書かれたページが表示されれば成功です
 .. [#gjs-port] アクセスできないときは、ファイアウォールなどで遮断していないことを確認してください
 .. [#gjs-jen-dir] 起動したときに /usr/local/apache-tomcat/webapps/jenkins/ ディレクトリができることを確認しておきましょう
-.. [#gjs-tomcat-root] ここではrootで作業していますが、jenkinsユーザを作ってそこで立ち上げる方が無難かと思います。起動時のユーザの ~/.jenkinsディレクトリ下に作成したジョブなどができるので注意
+.. [#gjs-tomcat-root] ここではrootで作業していますが、tomcatユーザを作ってそこで立ち上げる方が無難かと思います。起動時のユーザの ~/.jenkinsディレクトリ下に作成したジョブなどができるので注意
 .. [#gjs-tomcat-stop] stopするときは、start.shと同じディレクトリにある shutdown.sh を実行します。トイレに行って戻ってくるとjavaのプロセスが終了している感じです。焦らない、焦らない
 .. [#gjs-tomcat-stop2] でも、Jenkinsの設定画面からシャットダウンをあらかじめやっておくと、プロセスが落ちるのが早い気がします
 .. [#gjs-nanndekonnna] そしてどうしてこんなに注釈が多いんだ。どうしてこうなった。増やしてどうする←
@@ -196,9 +190,8 @@ jenkinsにプロジェクト作成
 
 いよいよJenkinsにプロジェクトを作ります。起動画面より、「新規ジョブを作成」を選択してジョブ名を適当に入力。「フリースタイル・プロジェクトのビルド」を選択して「OK」ボタンを押して下さい。
 次の画面で、「ソースコード管理システム」にGitがるのでそれを選択して下さい。さっそくgitのURLを入力する画面が現れるのでURLを打ち込んでやってください。
-ビルド・トリガの「SCMをポーリング」に「* * * * *」を打ち込んでやってください。
+ビルド・トリガの「SCMをポーリング」に「 ``* * * * *`` 」を打ち込んでやってください。
 「ビルド」の部分でシェルの実行を選択。シェルスクリプトを書け！と言われるのでsphinxのmakeコマンドを書きます。
-
 
 .. code-block:: console
 
@@ -210,7 +203,7 @@ jenkinsにプロジェクト作成
 
 
 .. figure:: img/setting-job.eps
-  :scale: 50%
+  :scale: 80%
   :alt: jobの設定
   :align: center
 
@@ -220,14 +213,14 @@ jenkinsにプロジェクト作成
 ***********
 ビルド結果
 ***********
-ビルドがOKなら青で示され、pdfが出力されているので確認します。プロジェクトの「ワークスペース」から自動でビルドされたファイルを見ることが出来ます。
-もしビルドがNGなら赤で示されています。コンソール出力から失敗した理由を調査して修正し、再度pushしましょう。
+ビルドが成功なら青で示され、pdfが出力されているので確認します。プロジェクトの「ワークスペース」から自動でビルドされたファイルを見ることが出来ます。
+もしビルドがNGなら赤で示されています。コンソール出力から失敗した理由を調査して修正し、再度pushしましょう [#gjs-mo]_ 。
 
 *********
 おしまい
 *********
 
-こうしてgithubにpushするとpdfが生成できる環境ができあがったのでした [#gjs-acc]_ [#gjs-mo]_ 。
+こうしてgithubにpushするとpdfが生成できる環境ができあがったのでした [#gjs-acc]_ 。
 
 .. [#gjs-acc] アカウント管理について書いていませんでしたが、ジョブに対してログインアカウントを作ることが出来るので、各自やってみて下さい
 .. [#gjs-mo] githubにpushする前に、rstファイルが意図したとおりになっているかローカルで確認する必要があります。ツールについてはrst2pdf(http://code.google.com/p/rst2pdf/)などがあります。
