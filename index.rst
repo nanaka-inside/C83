@@ -15,13 +15,13 @@ Contents:
    first.rst
    git/git.rst
    git/git-flow.rst
-   git/git-jenkins-sphinx.rst
    git/jenkins.rst
+   git/git-jenkins-sphinx.rst
    second.rst
    chuross-dropbox/android-mff.rst
    irc/irc.rst
    coreutils/coreutils.rst
-   coreutils/coreutils-2.rst
+   coreutils/coreutils-o.rst
 .. postgres/postgres-random.rst
 
 Indices and tables

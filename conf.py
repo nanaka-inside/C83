@@ -172,10 +172,10 @@ htmlhelp_basename = 'Nanaka-inside-c83doc'
 
 latex_elements = {
 # The paper size ('letterpaper' or 'a4paper').
-'papersize': 'a4paper',
+'papersize': 'b5j',
 
 # The font size ('10pt', '11pt' or '12pt').
-#'pointsize': '10pt',
+'pointsize': '10pt',
 
 # Additional stuff for the LaTeX preamble.
 #'preamble': '\\makeatletter\n\
@@ -192,11 +192,24 @@ latex_elements = {
 \\lfoot[ななか +inside press ◆ \\thepage]{}
 \\cfoot[]{}
 \\rfoot[]{ななか +inside press ◆ \\thepage}
+\\setlength{\\textheight}{\\paperheight}
+\\setlength{\\topmargin}{-5.4truemm}
+\\addtolength{\\topmargin}{-\\headheight}
+\\addtolength{\\topmargin}{-\\headsep}
+\\addtolength{\\textheight}{-40truemm}
+
+\\setlength{\\textwidth}{\\paperwidth}
+\\setlength{\\oddsidemargin}{-5.4truemm}
+\\setlength{\\evensidemargin}{-5.4truemm}
+\\addtolength{\\textwidth}{-40truemm}
+\setcounter{page}{4}
 """,
 'classoptions': ',twoside',
 'babel': '\\usepackage[english]{babel}'
 
 }
+
+latex_use_modindex = False
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).

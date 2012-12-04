@@ -1,3 +1,4 @@
 .. raw:: latex
 
-  \part{脱Git初心者なんやらかんやら}
+  \clearpage
+  \part{脱''Git初心者''に送る Git 活用 Tips}
