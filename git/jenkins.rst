@@ -27,13 +27,12 @@ Javaの起動オプションに"-Dfile.encoding=UTF-8"をつけないと、通�
 わかりづらいトラブルに巻き込まれる [#jenkins_trouble]_ ので
 なお、jenkinsはデフォルトで8080ポートで起動するため、すでに使用されている時には
 ポートを変えて起動しましょう。
-ポートを変えるには起動オプションに"--httpPort=8081"のように記述することで可能です。::
+ポートを変えるには起動オプションに"--httpPort=8081"のように記述することで可能です。
 
 .. code-block:: bash
 
   java -jar jenkins.war -Dfile.encoding=UTF-8 --httpPort=8081
 
-.. rubric:: 脚注
 .. [#jenkins_trouble] 私のことです
 
 .. image:: images/jenkins_top.eps
@@ -77,11 +76,12 @@ Jenkinsのプラグインのページを見ると "notifi" での検索結果が
 Growlへの通知
 -------------
 Growl 2.0 (Mac)、Jenkins Growl Plugin 1.1を使って説明します。
-1. Growlの環境設定のネットワークを開く
-2. 「外部からの通知を受け付ける」のチェックを入れる
-3. サーバのパスワードを設定する
-4. Jenkinsの「プラグインの管理」から「Jenkins Growl Plugin」をインストールする
-5. Jenkinsの「システムの設定」の「Global Growl Settings」のパスワードに先ほど設定したGrowlのサーバパスワードを設定する
+
+#. Growlの環境設定のネットワークを開く
+#. 「外部からの通知を受け付ける」のチェックを入れる
+#. サーバのパスワードを設定する
+#. Jenkinsの「プラグインの管理」から「Jenkins Growl Plugin」をインストールする
+#. Jenkinsの「システムの設定」の「Global Growl Settings」のパスワードに先ほど設定したGrowlのサーバパスワードを設定する
 
 あとは使いたいジョブの設定でビルド後の処理に「Growl」を追加し、IP AddressにGrowlのサーバのアドレス（ローカルで起動している場合は127.0.0.1）を指定すればOKです。
 
@@ -219,9 +219,9 @@ post-merge
 --------------------
 リモートリポジトリの.git/hooks以下に配置され、クライアントからのアクションによって
 機能するスクリプト郡です。githubなど自分でリモートリポジトリを管理できない場合には
-すべての機能が使えないことが多いです。
-※githubだとpost-updateでユーザ指定のURLを叩くことが可能。
+すべての機能が使えないことが多いです [#jenkins_github]_ 。
 
+.. [#jenkins_github] githubだとpost-updateでユーザ指定のURLを叩くことが可能。
 pre-receive
   リモートリポジトリでgit-receive-packが実行される時に呼び出される。
   これはローカルリポジトリでpushされたときに呼び出される。
@@ -253,7 +253,7 @@ post-update
   サンプルではupdate-server-infoを実行する。
 pre-auto-gc
   ``gc --auto`` が実行される時に呼び出される。
-  終了コードが0以外の時はgc --autoは実行されない。
+  終了コードが0以外の時は ``gc --auto`` は実行されない。
 post-rewrite
   ``commit --amend`` や ``rebase`` など、コミットを書き換えた時に呼び出される。
   ``filter-branch`` の実行時は *呼び出されない* 。
