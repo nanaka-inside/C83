@@ -430,7 +430,7 @@ msysgit [#msysgit]_ からダウンロードしインストールする。 次�
 .. code-block:: console
 
   C:\> git config --global user.name "あなたの名前"
-  C:\> git config --global user.email your_name@dwango.co.jp
+  C:\> git config --global user.email your_name@hoge.com
 
 このコマンドを実行するとホームディレクトリ直下に.gitconfigファイルができるが、Shift_JISのエンコードのままだとコミットした際に問題が起きるので、UTF-8に変換しておくこと。
 
@@ -439,7 +439,7 @@ git-flowをインストールする
 ---------------------------
 
 .. note:: その前に getopt と libinit3.ddl をインストールする。
-   util-linux-ng for Windows から「Complete package,  except sources」のリンクからダウンロードする。例えばデフォルトの「C:\Program Files (x86)\GnuWin32」にインストールしたら、その中の「bin\getopt.exe」と「bin\libintl3.ddl」をmsysgit のインストールディレクトリのbin、デフォルトだったら「C:\Program Files (x86)\Git\bin」にコピーする。
+   util-linux-ng for Windows から「Complete package,  except sources」のリンクからダウンロードする。例えばデフォルトの「C:\\Program Files (x86)\\GnuWin32」にインストールしたら、その中の「bin\\getopt.exe」と「bin\libintl3.ddl」をmsysgit のインストールディレクトリのbin、デフォルトだったら「C:\\Program Files (x86)\\Git\bin」にコピーする。
 
 githubからgit-flowのリポジトリとクローンする。
 
@@ -499,5 +499,4 @@ homebrewからgit-flowをインストールする。
    $ brew install git-flow
    $ git-flow version
 
-.. rubric:: 脚注
 
