@@ -10,7 +10,7 @@
  PostgreSQLと話そう！
 ======================
 こんにちは。@ijust3でございます。
-11月某日、本誌を一緒に執筆しているtbofficeさんから図\ref{}のようなIRCメッセージが突然送られてきました。。(実話です。)
+11月某日、本誌を一緒に執筆しているtbofficeさんから下記のようなIRCメッセージが送られてきました。。[#postgresql_real]_
 
 ::
 
@@ -26,13 +26,15 @@
   (mtgto) いまのクエリはまずかったよ、まどか
   (tboffice) あーあ刺さっちゃった
 
-
- な…　何を言っているのか　わからねーと思うが
- おれも　何を言われているのか　わからなかった…
+な…　何を言っているのか　わからねーと思うが
+おれも　何を言われているのか　わからなかった…
 
 さて、「御利益のあるバイト列を回転させることは出来ませんが、独自の命令を実装することなら出来ますよ」ということで、
-「PostgreSQLとお話したい!」というtbofficeさんの熱い期待に応えるため、
-今回はPostgreSQLで一問一答が出来るような簡単な機能を題材に、独自の構文拡張について書いていこうと思います。
+「PostgreSQLとお話したい!」というtbofficeさんの熱い期待に応えるため、[#postgresql_tboffice]_
+今回はPostgreSQLで一問一答が出来るような簡単な機能で、独自の構文拡張について書くことにしました。
+
+.. [#postgresql_real] 実話です
+.. [#postgresql_tboffice] この解釈で合っていたのだろうか？
 
 ==========
  作るもの
@@ -50,8 +52,8 @@
 .. code-block:: sql
 
   CREATE TABLE thanks (
-    req   text    NOT NULL,
-    res   text
+    req   text    NOT NULL,  /* リクエスト */
+    res   text               /* レスポンス */
   );
   INSERT INTO thanks (req, res) VALUES ('postgres', E'You\'re welcome!');
   INSERT INTO thanks (req, res) VALUES ('a lot!', 'Not at all!');
@@ -191,10 +193,10 @@ PG_KEYWORDの第3引数はキーワードの値を名前として使用可能な
 
 次に構文解析器へ"thanks"の処理を加えていきます。
 gram.yで、図¥ref{}のように、トークン型としてTHANKSを宣言します。
-%tokenで宣言したトークン型には、構文解析器生成時にgram.h内の#defineディレクティブで他のトークン型と衝突しないように数値が割り振られます。
+%tokenで宣言したトークン型には、構文解析器生成時にgram.h内の#defineディレクティブで他のトークン型と衝突しないように数値が割り振られます。[#postgresql_define_token_type]_
 <keyword>の部分は型識別子と呼ばれていて、gram.yの中で「const char *」と定義されており、続いて宣言されるトークン型の値も<keyword>と同じ型であることを表しています。
 
-図 Bison宣言部でトークン(終端記号)としてTHANKSを定義
+.. [#postgresql_define_token_type] kwlist.hで使用した定数THANKSは、ここで定義されています。
 
 .. code-block:: c
   
@@ -210,10 +212,20 @@ gram.yで、図¥ref{}のように、トークン型としてTHANKSを宣言し�
 ステートメントの定義
 ~~~~~~~~~~~~~~~~
 次にTHANKSコマンドのクエリ全体の規則を定義するための非終端記号として、ThanksStmtを宣言します。
-非終端記号は、自分自身を含む非終端記号や終端記号、その組み合わせへ置き換えが可能な記号です。
-例えば、図¥ref{}のように、使用するテーブルを複数指定出来るFROM句のfrom_listでは、再帰的規則を用いながら文法を解析していく様子が見られます。[#postgresql_from_list]_
 
-.. [#postgresql_from_list] SELECT * FROM A, B, C;のようにテーブルは複数指定出来ます。from_listはこの"A, B, C"の部分に該当する非終端記号です。
+非終端記号は、構文的に等価な、(自分自身を含んでも良い)非終端記号や終端記号、その組み合わせへ置き換えが可能な記号です。
+置き換えの規則はGrammar rulesの領域に、図¥ref{}のような形式で記述されます。
+図¥ref{}は具体例でFROM句の直後で、そのクエリで使用するテーブル名を列挙出来るfrom_listの文法規則を記述しています。
+ここでは、再帰的規則を用いながらfrom_listをtable_refへ変換し解析していく様子が見られます。[#postgresql_from_list]_
+
+.. [#postgresql_from_list] SELECT * FROM A, B, C;のようにテーブルは複数指定出来ます。from_listはこの"A, B, C"の部分等に該当する非終端記号です。
+
+::
+
+  非終端記号: ルール1 (非終端記号, 終端記号, その組み合わせ) { アクション (C言語で記述) }
+         | ルール2 (複数のルールを定義する場合、並べて書く事が出来る) { アクション (ルールの適用された方が実行される) }
+
+図 Bison文法規則の書式
 
 ::
 
@@ -237,6 +249,8 @@ gram.yで、図¥ref{}のように、トークン型としてTHANKSを宣言し�
 図 Bison宣言部でThanksStmt
 
 次に図¥ref{}では、stmtの規則としてThanksStmtを追加しています。
+stmtにはセミコロン(;)で区切られたクエリ1文が入ってきます。
+残る作業は、THANKSコマンドの仕様に沿ったクエリ1文(例: "THANKS, postgres")がstmtに入ってきた際に、ThanksStmtとマッチするように規則を定義すれば良さそうです。
 
 ::
 
@@ -249,43 +263,14 @@ gram.yで、図¥ref{}のように、トークン型としてTHANKSを宣言し�
 
 図 文法規則部にstmtの規則としてThanksStmtを追加
 
-
 ~~~~~~~~~~~~~~~~
-パラメータの取得
+ThanksStmtの定義
 ~~~~~~~~~~~~~~~~
-.. code-block:: c
-
-  /*********************************************************************
-   *
-   *    QUERY:
-   *        THANKS target_list FROM from_list
-   *
-   *********************************************************************/
-  ThanksStmt: 
-      THANKS target_list from_clause
-          {
-            SelectStmt *n = makeNode(SelectStmt);
-            n->distinctClause = NIL;
-            n->targetList = $2;
-            n->intoClause = NULL;
-            n->fromClause = $3;
-            n->whereClause = NULL;
-            n->groupClause = NIL;
-            n->havingClause = NULL;
-            n->windowClause = NIL;
-            $$ = (Node *)n;
-          }
-      ;
+図¥ref{}は
 
   
 .. code-block:: c
   
-  /*********************************************************************
-   *
-   *    QUERY:
-   *        THANKS a_expr
-   *
-   *********************************************************************/
   ThanksStmt: 
       THANKS thanks_cmd    { $$ = (Node *) $2; }
       | THANKS ',' thanks_cmd  { $$ = (Node *) $3; }
