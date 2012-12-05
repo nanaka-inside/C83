@@ -12,13 +12,6 @@
 こんにちは。@ijust3でございます。
 11月某日、本誌を一緒に執筆しているtbofficeさんから図\ref{}のようなIRCメッセージが突然送られてきました。。(実話です。)
 
- な…　何を言っているのか　わからねーと思うが
- おれも　何を言われているのか　わからなかった…
-
-さて、「御利益のあるバイト列を回転させることは出来ませんが、独自の命令を実装することなら出来ますよ」ということで、
-「PostgreSQLとお話したい!」というtbofficeさんの熱い期待に応えるため、
-今回はPostgreSQLで一問一答が出来るような簡単な機能を題材に、独自の構文拡張について書いていこうと思います。
-
 ::
 
   (tboffice) ijust3: ねーねー
@@ -32,6 +25,14 @@
   (tboffice) んーと、んーと
   (mtgto) いまのクエリはまずかったよ、まどか
   (tboffice) あーあ刺さっちゃった
+
+
+ な…　何を言っているのか　わからねーと思うが
+ おれも　何を言われているのか　わからなかった…
+
+さて、「御利益のあるバイト列を回転させることは出来ませんが、独自の命令を実装することなら出来ますよ」ということで、
+「PostgreSQLとお話したい!」というtbofficeさんの熱い期待に応えるため、
+今回はPostgreSQLで一問一答が出来るような簡単な機能を題材に、独自の構文拡張について書いていこうと思います。
 
 ==========
  作るもの
@@ -68,31 +69,21 @@
 .. [#postgresql_download] http://www.postgresql.org/download からSource code版を取得できます。
 
 展開したPostgreSQLのソースコードの中には、サーバサイトのソースコードだけで無く、psqlのようなクライアントアプリケーションや関連するライブラリ等も含まれています。
-今回は、サーバサイドのコードが配置されている"src/backend"ディレクトリと、そこで利用するヘッダファイルが置かれている"src/include"ディレクトリ(図\ref{})を主に見ていきます。
-
-
-
-図 配布されているソースコードのディレクトリ構造
+今回は、サーバサイドのコードが配置されている"src/backend"ディレクトリと、そこで利用するヘッダファイルが置かれている"src/include"ディレクトリを主に見ていきます。
 
 ----------------
 クエリ処理の概要
 ----------------
 まずは、今回の変更箇所を明確にするため、サーバ側でのクエリ処理全体の流れについて簡単に紹介します。
 
-通常、PostgreSQLサーバの起動には図\ref{}のようにpostgresかpg_ctlを使用すると思います [#postgresql_pg_ctl]_ [#postgresql_server_start]_ 。
+通常、PostgreSQLサーバの起動にはpostgresかpg_ctlを使用すると思います [#postgresql_server_start]_ [#postgresql_pg_ctl]_ 。
 
+.. [#postgresql_server_start] http://www.postgresql.jp/document/9.2/html/server-start.html
 .. [#postgresql_pg_ctl] pg_ctlは内部でsystem()からpostgresコマンドを呼び出して、PostgreSQLサーバを起動させています。
-.. [#postgresql_server_start] 引用: http://www.postgresql.jp/document/9.2/html/server-start.html
 
 postgresのエントリポイントであるmain関数は"src/backend/main/main.c"にあります。
 postgresは起動すると一連の初期化処理を行った後、クライアントからの接続を待つループ処理に入ります。
 クライアントからの接続を受けるとpostgresはforkし、子プロセスがクライアントからのクエリを処理します。
-
-::
-
-  $ postgres
-  または
-  $ pg_ctl start
 
 クエリ処理は大まかに次のような流れになります。
 
@@ -101,7 +92,7 @@ postgresは起動すると一連の初期化処理を行った後、クライア
 2. 意味解析・リライト
   構文木からクエリ木 [#postgresql_query_tree]_ を生成と、ルール条件に従ったクエリの書き換え（例えばVIEWの適用など）を行います。
 3. 実行計画の作成・最適化
-  クエリ木からプラン木（実行計画）を作成します。(図\ref{})
+  クエリ木からプラン木（実行計画）を作成します。
   実行計画は基本的にはルールベース・コストベース [#postgresql_plan]_ ・結合順序の組み合わせ [#postgresql_plan2]_ で決定されます。
 4. 実行
   決定されたプラン木を基に、処理を実行していきます。
@@ -110,10 +101,7 @@ postgresは起動すると一連の初期化処理を行った後、クライア
 .. [#postgresql_plan] 例えばテーブルを結合する際に、入れ子結合・マージ結合・ハッシュ結合が使えるが、どれが一番速く処理できるか、と言った推測をします。
 .. [#postgresql_plan2] 使用するリレーションが3つ以上の場合。
 
-では早速、新しいコマンド作成のために構文解析器を拡張してみましょう。
-
-..ここに図を挿入
-図 プラン木の例
+新しいコマンド作成のために、まず、構文解析器を拡張する必要がありそうですね。早速やってみましょう。
 
 --------------
 字句・構文解析
@@ -166,8 +154,8 @@ THANKSコマンドの実装のためには、クエリの冒頭に置く"THANKS"
 * コンマとセミコロン: single-characterトークン
 といった具合に分類されます [#postgresql_scan]_ 。
 
-.. [#postgresql_token] 1,2,3...は整数という括りで分類されますが、SELECTは「SELECT」として分類されるのです！と乱暴な補足を入れてみます。
-.. [#postgresql_scan] そう分類されるようにscan.lが実装されています。
+.. [#postgresql_token] 1,2,3...は整数という括りで分類されますが、SELECTは「SELECT」として分類されるのです！
+.. [#postgresql_scan] scan.lにその実装があります。
 
 そういう訳で、"THANKS"をSELECTと同様に特別な終端記号として字句解析されるように、キーワードに登録します。(図¥ref{})
 このkwlist.hは、字句解析器と構文解析器の両方から参照され、キーワードを共有しています。
@@ -202,80 +190,64 @@ PG_KEYWORDの第3引数はキーワードの値を名前として使用可能な
 図 文字列"thanks"をキーワードとして登録 (src/include/parser/kwlist.h)
 
 次に構文解析器へ"thanks"の処理を加えていきます。
+gram.yで、図¥ref{}のように、トークン型としてTHANKSを宣言します。
+%tokenで宣言したトークン型には、構文解析器生成時にgram.h内の#defineディレクティブで他のトークン型と衝突しないように数値が割り振られます。
+<keyword>の部分は型識別子と呼ばれていて、gram.yの中で「const char *」と定義されており、続いて宣言されるトークン型の値も<keyword>と同じ型であることを表しています。
 
-Bison宣言部でトークン(終端記号)としてTHANKSを定義
+図 Bison宣言部でトークン(終端記号)としてTHANKSを定義
 
 .. code-block:: c
-
-  /*
-   * If you want to make any keyword changes, update the keyword table in
-   * src/include/parser/kwlist.h and add new keywords to the appropriate one
-   * of the reserved-or-not-so-reserved keyword lists, below; search
-   * this file for "Keyword category lists".
-   */
   
   /* ordinary key words in alphabetical order */
   %token <keyword> ABORT_P ABSOLUTE_P ACCESS ACTION ADD_P ADMIN AFTER
-    AGGREGATE ALL ALSO ALTER ALWAYS ANALYSE ANALYZE AND ANY ARRAY AS ASC
     ...
     TABLE TABLES TABLESPACE TEMP TEMPLATE TEMPORARY TEXT_P THANKS
-    THEN TIME TIMESTAMP
-      ...
+    ...
 
+図 Bison宣言部でトークン型としてTHANKSを定義
 
-Bison宣言部で、Nodeポインタ型としてThanksStmtを非終端記号として定義
+~~~~~~~~~~~~~~~~
+ステートメントの定義
+~~~~~~~~~~~~~~~~
+次にTHANKSコマンドのクエリ全体の規則を定義するための非終端記号として、ThanksStmtを宣言します。
+非終端記号は、自分自身を含む非終端記号や終端記号、その組み合わせへ置き換えが可能な記号です。
+例えば、図¥ref{}のように、使用するテーブルを複数指定出来るFROM句のfrom_listでは、再帰的規則を用いながら文法を解析していく様子が見られます。[#postgresql_from_list]_
+
+.. [#postgresql_from_list] SELECT * FROM A, B, C;のようにテーブルは複数指定出来ます。from_listはこの"A, B, C"の部分に該当する非終端記号です。
+
+::
+
+  from_list:
+      table_ref						{ $$ = list_make1($1); }
+      | from_list ',' table_ref		{ $$ = lappend($1, $3); }
+    ;
+
+図 再帰的規則を使ったfrom_listの規則
+
+非終端記号の宣言は、Bison宣言部で図¥ref{}のように%typeを用いて宣言します。
+<node>はここで宣言される非終端記号がNode型(構文木の1ノード)であることを表しています。
+
 ::
 
   %type <node>	stmt schema_stmt
-    AlterDatabaseStmt AlterDatabaseSetStmt AlterDomainStmt AlterEnumStmt
     ...
-    RuleActionStmt RuleActionStmtOrEmpty RuleStmt
     SecLabelStmt SelectStmt TransactionStmt TruncateStmt ThanksStmt
-    UnlistenStmt UpdateStmt VacuumStmt
-		...
+    ...
 
-文法規則部にstmtの規則としてThanksStmtを追加
+図 Bison宣言部でThanksStmt
+
+次に図¥ref{}では、stmtの規則としてThanksStmtを追加しています。
 
 ::
 
   stmt :
 			AlterDatabaseStmt
-			| AlterDatabaseSetStmt
 			...
 			| SelectStmt
 			| ThanksStmt
-			| TransactionStmt
 			...
-			| ViewStmt
-			| /*EMPTY*/
-				{ $$ = NULL; }
-		;
 
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-パラメータを持たないコマンドの実装
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-パラメータを取らないコマンドの実装例
-
-.. code-block:: c
-
-  /*********************************************************************
-   *
-   *    QUERY:
-   *        THANKS
-   *
-   *********************************************************************/
-  ThanksStmt: 
-      THANKS
-           {
-            VacuumStmt *n = makeNode(VacuumStmt);
-            n->options = VACOPT_ANALYZE;
-            n->freeze_min_age = -1;
-            n->freeze_table_age = -1;
-            n->relation = NULL;
-            n->va_cols = NIL;
-            $$ = (Node *)n;
-          }
+図 文法規則部にstmtの規則としてThanksStmtを追加
 
 
 ~~~~~~~~~~~~~~~~
@@ -304,6 +276,9 @@ Bison宣言部で、Nodeポインタ型としてThanksStmtを非終端記号と�
             $$ = (Node *)n;
           }
       ;
+
+  
+.. code-block:: c
   
   /*********************************************************************
    *
@@ -353,10 +328,6 @@ Bison宣言部で、Nodeポインタ型としてThanksStmtを非終端記号と�
           $$ = (Node *)n;
         }
       ;
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-SelectStmtへのメンバの追加
-~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
