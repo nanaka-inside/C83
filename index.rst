@@ -6,8 +6,6 @@
 Welcome to Nanaka-inside-c83's documentation!
 =============================================
 
-Contents:
-
 .. toctree::
    :maxdepth: 4
    :numbered:
@@ -23,11 +21,4 @@ Contents:
    coreutils/coreutils.rst
    coreutils/coreutils-o.rst
 .. postgres/postgres-random.rst
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
