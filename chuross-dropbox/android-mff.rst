@@ -1,6 +1,6 @@
 
 ====================================
-Androidで学ぶDropboxAPI入門
+Androidで学ぶDropbox API入門
 ====================================
 みなさん初めまして、ちゅろっす(**Twitter: @chuross**)です。
 プログラム書き始めてから大体二年くらいです、最初はPHP使ってニュースサイトや2chまとめアンテナサイトを作っては運営していました。
@@ -16,11 +16,11 @@ Androidで学ぶDropboxAPI入門
 
 自己紹介はここまでにしておいて早速プログラムの話に入っていきましょう。
 
-DropboxAPIを使って試しになんか作ってみたかったので、Dropboxの中にある画像を使ってAndroidで表示できるアプリを作ってみました。コードは全てGitHubに上がっているので、このコードを読みながら見るとよいと思います！Pull Request待ってます！
+Dropbox APIを使って試しになんか作ってみたかったので、Dropboxの中にある画像を使ってAndroidで表示できるアプリを作ってみました。コードは全てGitHubに上がっているので、このコードを読みながら見るとよいと思います！Pull Request待ってます！
 
 `https://github.com/chuchuross/ImageGallery <https://github.com/chuchuross/ImageGallery>`_
 
-今回はこの画像ギャラリーのアプリで使用した時を例にDropboxAPIの使い方を中心に説明していきたいと思います！
+今回はこの画像ギャラリーのアプリで使用した時を例にDropbox APIの使い方を中心に説明していきたいと思います！
 
 画像ギャラリーアプリについて
 ====================================
@@ -32,14 +32,14 @@ DropboxAPIを使って試しになんか作ってみたかったので、Dropbox
 3. サムネイルをグリッドで表示
 4. サムネイルを押した時に画像を表示
 
-DropboxAPIのサンプル用に作ったアプリなので機能は少なめです。
+Dropbox APIのサンプル用に作ったアプリなので機能は少なめです。
 今作っているGooglePlayに出す予定のアプリでも似ている機能を実装させたいと思っています。
 
 GooglePlayには過去一度公開したことがあるのですが、手間かかりますよねー要求される画像が思ったよりも多くてビックリしてました。
 ちなみに初めて公開したアプリのDL数は大体100くらいでした。しょっぱい…。
 
 
-DropboxAPIって何ぞや
+Dropbox APIって何ぞや
 ====================================
 Dropboxにあるファイル操作を外部のアプリケーションで行うことが可能で、主な機能は以下の二つです。
 
@@ -51,7 +51,7 @@ Dropboxにあるファイル操作を外部のアプリケーションで行う�
 これらの機能が自分の作ったアプリで利用できるようになります！素敵ですね。
 Android版の他にもiOS版、Ruby版などがあるので作りたい環境に合わせてAPIを利用できるのはいいですね！今回はAndroid版を使用します。
 
-**DropboxAPIを利用するために必要な物**
+**Dropbox APIを利用するために必要な物**
 
 SDKは `https://www.dropbox.com/developers/reference/sdk <https://www.dropbox.com/developers/reference/sdk>`_ で入手することができます。
 APIの利用にはDropboxアカウントとデベロッパー登録が必要です。
@@ -133,7 +133,7 @@ AndroidからDropbox認証を行う
 
    **DropboxAuthActivity(Dropboxの認証画面)**
 
-   **DropboxApiManager(DropboxAPIの実行クラス)**
+   **DropboxAPIManager(Dropbox APIの実行クラス)**
 
 無事プロジェクトに導入したところで、いよいよ認証処理を実装します。
 認証画面を作るためにメインのActivityとは別のActivityを実装しましょう。
@@ -142,7 +142,7 @@ AndroidからDropbox認証を行う
 認証画面表示まで
 --------------------------
 今回ぼくが作ったプロジェクトではDropboxAuthActivityという名前で実装しました。
-このActivity内呼ばれているDropboxApiManagerがDropbpxApiの処理を行っていて、Authenticationで認証処理を行います。
+このActivity内呼ばれているDropboxAPIManagerがDropbpxApiの処理を行っていて、Authenticationで認証処理を行います。
 
 .. raw:: pdf
 
@@ -157,19 +157,19 @@ AndroidからDropbox認証を行う
    */
   public DropboxAPI<AndroidAuthSession> Authentication() {
       AppKeyPair appkeys = new AppKeyPair(res.getString(
-R.string.dropbox_app_key), res.getString(R.string.dropbox_app_secret));
+   R.string.dropbox_app_key), res.getString(R.string.dropbox_app_secret));
       AndroidAuthSession session = 
                      new AndroidAuthSession(appkeys, AccessType.APP_FOLDER);
 
-      DropboxAPI<AndroidAuthSession> dropboxApi =
+      DropboxAPI<AndroidAuthSession> dropboxAPI =
                      new DropboxAPI<AndroidAuthSession>(session);
-      dropboxApi.getSession().startAuthentication(context);
+      dropboxAPI.getSession().startAuthentication(context);
 
-      return dropboxApi;
+      return dropboxAPI;
   }
 
 AppKeyPairのコンストラクタにデベロッパー登録時に取得したApp KeyとApp Secretをセットして、AndroidAuthSessionにAppKeyPairとデペロッパー登録時に選択したAccess typeを引数に入れます。
-そしてDropboxAPIの引数の中にAndroidAuthSessionを入れた後に、startAuthenticationを呼び出すとDropboxの認証画面が表示されるようになります。
+そしてDropbox APIの引数の中にAndroidAuthSessionを入れた後に、startAuthenticationを呼び出すとDropboxの認証画面が表示されるようになります。
 
 .. figure:: src/2.eps
   :scale: 70%
@@ -191,7 +191,7 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
 
   **認証後のメイン画面**
 認証後の処理は認証画面のActivity内にあるonResumeで行います。
-認証が成功しているかどうかはAuthenticationメソッドの処理で返しているDropboxAPI<AndroidAuthSession>からgetSessionからsessionを取得し、authenticationSuccessfulを呼び出すことで判別できます。
+認証が成功しているかどうかはAuthenticationメソッドの処理で返しているDropboxAPI<AndroidAuthSession>からgetSessionからセッションを取得し、authenticationSuccessfulを呼び出すことで判別できます。
 
 もし認証が完了していればfinishAuthenticationで認証処理を終了して、取得できるようになったトークンをSharedPreferencesに保存して認証画面の処理は終了です。
 以降のAPIを使った処理はこのSharedPreferencesに保存したトークンを使用してDropboxから画像をダウンロードするようにします。
@@ -200,15 +200,15 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
 
   protected void onResume() {
       super.onResume();
-      if (!dropboxApi.getSession().authenticationSuccessful()) {
+      if (!dropboxAPI.getSession().authenticationSuccessful()) {
           return;
       }
 
       //認証処理を終了する
-      dropboxApi.getSession().finishAuthentication();
+      dropboxAPI.getSession().finishAuthentication();
 
       //アクセストークンを取得する
-      AccessTokenPair tokens = dropboxApi.getSession().getAccessTokenPair();
+      AccessTokenPair tokens = dropboxAPI.getSession().getAccessTokenPair();
 
       //取得したトークンをSharedPreferencesに保存する
       Resources res = getResources();
@@ -235,10 +235,10 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
 ----------------------------------------------------
 関係のあるコード
 
-   **DropboxApiManager(DropboxAPIの実行クラス)**
+   **Dropbox APIManager(Dropbox APIの実行クラス)**
 
 アクセストークンの取得は認証時に登録したSharedPreferencesから行います。
-今回作ったアプリではDropboxApiManagerの中に実装されている、getApiでトークン取得処理実行されています。
+今回作ったアプリではDropbox APIManagerの中に実装されている、getApiでトークン取得処理実行されています。
 
 .. code-block:: java
 
@@ -267,13 +267,13 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
       AndroidAuthSession session = 
                    new AndroidAuthSession(access, AccessType.APP_FOLDER);
 
-      DropboxAPI<AndroidAuthSession> dropboxApi =
+      DropboxAPI<AndroidAuthSession> dropboxAPI =
                          new DropboxAPI<AndroidAuthSession>(session);
       AccessTokenPair tokenPair = 
                       new AccessTokenPair(userToken, userSecret);
-      dropboxApi.getSession().setAccessTokenPair(tokenPair);
+      dropboxAPI.getSession().setAccessTokenPair(tokenPair);
 
-      return dropboxApi;
+      return dropboxAPI;
   }
 
 ポイントはAndroidAuthSessionまでは認証時と同じで、AccessTokenPairをセットする時にSharedPreferencesに保存したアクセストークンを入れています。
@@ -283,9 +283,9 @@ Dropboxからファイルの取得する
 ===============================
 関係のあるコード
 
-   **DropboxApiManager(DropboxAPIの実行クラス)**
+   **Dropbox APIManager(Dropbox APIの実行クラス)**
 
-フォルダにあるファイルを取得する時には先程説明したgetApiメソッドで取得したDropboxAPIの中にあるmetadataメソッドを利用することで取得する事ができます。
+フォルダにあるファイルを取得する時には先程説明したgetApiメソッドで取得したDropbox APIの中にあるmetadataメソッドを利用することで取得する事ができます。
 取得先のファイルパスと、取得する最大項目数をセットして利用します。この時、フォルダ内にあるファイル以上の数値を入れるとエラーで落ちる事があるので注意しましょう。
 
 .. code-block:: java
@@ -308,11 +308,11 @@ Dropboxからファイルのダウンロードを行う
 =========================================
 関係のあるコード
 
-   **DropboxApiManager(DropboxAPIの実行クラス)**
+   **Dropbox APIManager(Dropbox APIの実行クラス)**
 
    **ImageCache(画像キャッシュ)**
 
-ファイルの取得はgetApiで取得したDropboxAPIの中のgetFileStreamで行えます。
+ファイルの取得はgetApiで取得したDropbox APIの中のgetFileStreamで行えます。
 先程の項目で説明したgetFileListメソッドで取得したファイルパスを基にgetFileStreamメソッドにファイルパスを入れると、Dropbox内に保存している画像のInputStreamを取得する事ができます。
 こうして取得したInputStreamをContext#openFileOutputのwriteで書き込んであげると、Androidの端末内にファイルが保存されます。
 
@@ -332,10 +332,10 @@ Dropboxからファイルのダウンロードを行う
 
 感想とまとめ
 =================
-ここまで読んでみて大体のDropboxAPIはいかがでしょうか！
+ここまで読んでみて大体のDropbox APIはいかがでしょうか！
 導入と認証は手順が多いですが、トークンが利用できるようになれば後の操作は簡単ですね。
 Dropboxからファイルを取得する時はInputstreamでくるのでZIPファイルに圧縮したり、AndroidであればBitmapFactoryに放り込んだ後のBitmapをImageViewにセットして表示したり自由度は高そうですね！
 
 ただ1つ1つのファイルの取得できる速度は割と遅いので、画像のサムネイルを取得するような大量にリクエストを投げる場合はバックグラウンドで常にDropbox内のフォルダから画像を取得して端末内に保存処理を動かし続けたりする必要がありそうですね。
 
-簡単なアプリを例にDropboxAPIを紹介してみました、みなさんも機会があれば是非アプリに導入してみてください！
+簡単なアプリを例にDropbox APIを紹介してみました、みなさんも機会があれば是非アプリに導入してみてください！
