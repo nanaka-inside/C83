@@ -122,7 +122,7 @@ libsフォルダにjarを入れてプロジェクトをクリーンしてあげ�
 
 .. code-block:: xml
 
-  <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+  <uses-permission android:name="android.permission.INTERNET" />
 
 これで導入は完了です。
 次の項目でDropboxの認証を説明していきます。
@@ -156,8 +156,8 @@ AndroidからDropbox認証を行う
    * @return session APIセッション
    */
   public DropboxAPI<AndroidAuthSession> Authentication() {
-      AppKeyPair appkeys = new AppKeyPair(res.getString(R.string.dropbox_app_key),
-               res.getString(R.string.dropbox_app_secret));
+      AppKeyPair appkeys = new AppKeyPair(res.getString(
+R.string.dropbox_app_key), res.getString(R.string.dropbox_app_secret));
       AndroidAuthSession session = 
                      new AndroidAuthSession(appkeys, AccessType.APP_FOLDER);
 
@@ -213,12 +213,14 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
       //取得したトークンをSharedPreferencesに保存する
       Resources res = getResources();
       SharedPreferences sp = getSharedPreferences(
-                       res.getString(R.string.sp_dropbox_auth),MODE_PRIVATE);
+              res.getString(R.string.sp_dropbox_auth),MODE_PRIVATE);
       Editor edit = sp.edit();
-      edit.putBoolean(res.getString(R.string.sp_key_is_autentication), true);
-      edit.putString(res.getString(R.string.sp_key_access_token), tokens.key);
-      edit.putString(
-          res.getString(R.string.sp_key_access_token_secret), tokens.secret);
+      edit.putBoolean(res.getString(
+                          R.string.sp_key_is_autentication), true);
+      edit.putString(res.getString(
+                          R.string.sp_key_access_token), tokens.key);
+      edit.putString(res.getString(
+               R.string.sp_key_access_token_secret), tokens.secret);
 
       //メイン画面に遷移させる
       startActivity(new Intent(this, MainActivity.class));
@@ -259,14 +261,16 @@ Authenticationで取得した値はDropboxAPI<AndroidAuthSession>型のメンバ
           throw new DropboxException("Token is null.");
       }
 
-      AppKeyPair access = new AppKeyPair(res.getString(R.string.dropbox_app_key),
-  res.getString(R.string.dropbox_app_secret));
+      AppKeyPair access = 
+            new AppKeyPair(res.getString(R.string.dropbox_app_key),
+                  res.getString(R.string.dropbox_app_secret));
       AndroidAuthSession session = 
                    new AndroidAuthSession(access, AccessType.APP_FOLDER);
 
       DropboxAPI<AndroidAuthSession> dropboxApi =
                          new DropboxAPI<AndroidAuthSession>(session);
-      AccessTokenPair tokenPair = new AccessTokenPair(userToken, userSecret);
+      AccessTokenPair tokenPair = 
+                      new AccessTokenPair(userToken, userSecret);
       dropboxApi.getSession().setAccessTokenPair(tokenPair);
 
       return dropboxApi;
@@ -295,8 +299,9 @@ Dropboxからファイルの取得する
    * @throws DropboxException
    */
   public List<Entry> getFileList(String path, int maxItemCount)
-                                                   throws DropboxException {
-      return getApi().metadata(path, maxItemCount, null, true, null).contents;
+                                              throws DropboxException {
+      return getApi()
+             .metadata(path, maxItemCount, null, true, null).contents;
   }
 
 Dropboxからファイルのダウンロードを行う
@@ -320,7 +325,8 @@ Dropboxからファイルのダウンロードを行う
    * @return {@link DropboxInputStream}
    * @throws DropboxException
    */
-  public DropboxInputStream getFileStream(String filePath) throws DropboxException {
+  public DropboxInputStream getFileStream(String filePath)
+                                           throws DropboxException {
       return getApi().getFileStream(filePath, null);
   }
 
