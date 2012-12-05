@@ -203,6 +203,8 @@ PG_KEYWORDの第3引数はキーワードの値を名前として使用可能な
 
 次に構文解析器へ"thanks"の処理を加えていきます。
 
+Bison宣言部でトークン(終端記号)としてTHANKSを定義
+
 .. code-block:: c
 
   /*
@@ -216,26 +218,27 @@ PG_KEYWORDの第3引数はキーワードの値を名前として使用可能な
   %token <keyword> ABORT_P ABSOLUTE_P ACCESS ACTION ADD_P ADMIN AFTER
   	AGGREGATE ALL ALSO ALTER ALWAYS ANALYSE ANALYZE AND ANY ARRAY AS ASC
   	...
-  	TABLE TABLES TABLESPACE TEMP TEMPLATE TEMPORARY TEXT_P THANKS THEN TIME TIMESTAMP
+  	TABLE TABLES TABLESPACE TEMP TEMPLATE TEMPORARY TEXT_P THANKS
+    THEN TIME TIMESTAMP
       ...
 
-図 Bison宣言部でトークン(終端記号)としてTHANKSを定義
 
+Bison宣言部で、Nodeポインタ型としてThanksStmtを非終端記号として定義
 ::
 
-%type <node>	stmt schema_stmt
+  %type <node>	stmt schema_stmt
 		AlterDatabaseStmt AlterDatabaseSetStmt AlterDomainStmt AlterEnumStmt
 		...
 		RuleActionStmt RuleActionStmtOrEmpty RuleStmt
 		SecLabelStmt SelectStmt TransactionStmt TruncateStmt ThanksStmt
 		UnlistenStmt UpdateStmt VacuumStmt
 		...
-図 Bison宣言部で、Nodeポインタ型としてThanksStmtを非終端記号として定義
 
+文法規則部にstmtの規則としてThanksStmtを追加
 
 ::
 
-stmt :
+  stmt :
 			AlterDatabaseStmt
 			| AlterDatabaseSetStmt
 			...
@@ -248,13 +251,13 @@ stmt :
 				{ $$ = NULL; }
 		;
 
-図 文法規則部にstmtの規則としてThanksStmtを追加
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 パラメータを持たないコマンドの実装
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 パラメータを取らないコマンドの実装例
-.. code-block:: none
+
+.. code-block:: c
 
   /*****************************************************************************
    *
@@ -278,8 +281,7 @@ stmt :
 ~~~~~~~~~~~~~~~~
 パラメータの取得
 ~~~~~~~~~~~~~~~~
-
-.. code-block:: none
+.. code-block:: c
 
   /*****************************************************************************
    *
