@@ -26,10 +26,7 @@
   (mtgto) いまのクエリはまずかったよ、まどか
   (tboffice) あーあ刺さっちゃった
 
-|な…　何を言っているのか　わからねーと思うが
-|おれも　何を言われているのか　わからなかった…
-
-さて、「御利益のあるバイト列を回転させることは出来ませんが、独自の命令を実装することなら出来ますよ」ということで、
+さて、「御利益のあるバイト列を回転させる方法は分かりませんが、独自の命令を実装することなら出来ますよ」ということで、
 「PostgreSQLとお話したい!」というtbofficeさんの熱い期待に応えるため、[#postgresql_tboffice]_
 今回はPostgreSQLで一問一答が出来るような簡単な機能で、独自の構文拡張について書くことにしました。
 
@@ -57,6 +54,8 @@
   );
   INSERT INTO thanks (req, res) VALUES ('postgres', E'You\'re welcome!');
   INSERT INTO thanks (req, res) VALUES ('a lot!', 'Not at all!');
+
+  図 thanksテーブルの定義と挿入したデータ
 
 ======
  実装
