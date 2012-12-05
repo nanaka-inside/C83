@@ -216,9 +216,9 @@ Bison宣言部でトークン(終端記号)としてTHANKSを定義
   
   /* ordinary key words in alphabetical order */
   %token <keyword> ABORT_P ABSOLUTE_P ACCESS ACTION ADD_P ADMIN AFTER
-  	AGGREGATE ALL ALSO ALTER ALWAYS ANALYSE ANALYZE AND ANY ARRAY AS ASC
-  	...
-  	TABLE TABLES TABLESPACE TEMP TEMPLATE TEMPORARY TEXT_P THANKS
+    AGGREGATE ALL ALSO ALTER ALWAYS ANALYSE ANALYZE AND ANY ARRAY AS ASC
+    ...
+    TABLE TABLES TABLESPACE TEMP TEMPLATE TEMPORARY TEXT_P THANKS
     THEN TIME TIMESTAMP
       ...
 
@@ -227,11 +227,11 @@ Bison宣言部で、Nodeポインタ型としてThanksStmtを非終端記号と�
 ::
 
   %type <node>	stmt schema_stmt
-		AlterDatabaseStmt AlterDatabaseSetStmt AlterDomainStmt AlterEnumStmt
-		...
-		RuleActionStmt RuleActionStmtOrEmpty RuleStmt
-		SecLabelStmt SelectStmt TransactionStmt TruncateStmt ThanksStmt
-		UnlistenStmt UpdateStmt VacuumStmt
+    AlterDatabaseStmt AlterDatabaseSetStmt AlterDomainStmt AlterEnumStmt
+    ...
+    RuleActionStmt RuleActionStmtOrEmpty RuleStmt
+    SecLabelStmt SelectStmt TransactionStmt TruncateStmt ThanksStmt
+    UnlistenStmt UpdateStmt VacuumStmt
 		...
 
 文法規則部にstmtの規則としてThanksStmtを追加
