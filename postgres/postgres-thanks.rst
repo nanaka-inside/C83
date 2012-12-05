@@ -259,23 +259,23 @@ Bison宣言部で、Nodeポインタ型としてThanksStmtを非終端記号と�
 
 .. code-block:: c
 
-  /*****************************************************************************
+  /*********************************************************************
    *
-   *		QUERY:
-   *				THANKS
+   *    QUERY:
+   *        THANKS
    *
-   *****************************************************************************/
+   *********************************************************************/
   ThanksStmt: 
-  		THANKS
-   				{
-  					VacuumStmt *n = makeNode(VacuumStmt);
-  					n->options = VACOPT_ANALYZE;
-  					n->freeze_min_age = -1;
-  					n->freeze_table_age = -1;
-  					n->relation = NULL;
-  					n->va_cols = NIL;
-  					$$ = (Node *)n;
-  				}
+      THANKS
+           {
+            VacuumStmt *n = makeNode(VacuumStmt);
+            n->options = VACOPT_ANALYZE;
+            n->freeze_min_age = -1;
+            n->freeze_table_age = -1;
+            n->relation = NULL;
+            n->va_cols = NIL;
+            $$ = (Node *)n;
+          }
 
 
 ~~~~~~~~~~~~~~~~
@@ -283,76 +283,76 @@ Bison宣言部で、Nodeポインタ型としてThanksStmtを非終端記号と�
 ~~~~~~~~~~~~~~~~
 .. code-block:: c
 
-  /*****************************************************************************
+  /*********************************************************************
    *
-   *		QUERY:
-   *				THANKS target_list FROM from_list
+   *    QUERY:
+   *        THANKS target_list FROM from_list
    *
-   *****************************************************************************/
+   *********************************************************************/
   ThanksStmt: 
-  		THANKS target_list from_clause
-  				{
-  					SelectStmt *n = makeNode(SelectStmt);
-   					n->distinctClause = NIL;
-  					n->targetList = $2;
-  					n->intoClause = NULL;
-  					n->fromClause = $3;
-  					n->whereClause = NULL;
-  					n->groupClause = NIL;
-  					n->havingClause = NULL;
-  					n->windowClause = NIL;
-  					$$ = (Node *)n;
-  				}
-  		;
+      THANKS target_list from_clause
+          {
+            SelectStmt *n = makeNode(SelectStmt);
+            n->distinctClause = NIL;
+            n->targetList = $2;
+            n->intoClause = NULL;
+            n->fromClause = $3;
+            n->whereClause = NULL;
+            n->groupClause = NIL;
+            n->havingClause = NULL;
+            n->windowClause = NIL;
+            $$ = (Node *)n;
+          }
+      ;
   
-  /*****************************************************************************
+  /*********************************************************************
    *
-   *		QUERY:
-   *				THANKS a_expr
+   *    QUERY:
+   *        THANKS a_expr
    *
-   *****************************************************************************/
+   *********************************************************************/
   ThanksStmt: 
-  		THANKS thanks_cmd		{ $$ = (Node *) $2; }
-  		| THANKS ',' thanks_cmd	{ $$ = (Node *) $3; }
-  	;
+      THANKS thanks_cmd    { $$ = (Node *) $2; }
+      | THANKS ',' thanks_cmd  { $$ = (Node *) $3; }
+    ;
   
   thanks_cmd:
-  		a_expr
-  			{
-  				ResTarget *rt = makeNode(ResTarget);
-  				RangeVar *from = NULL;
-  				Node *colref = NULL;
-  				A_Expr *where = NULL;
-  				SelectStmt *n = makeNode(SelectStmt);
-				
-  				/* target_el */
-  				rt->name = NULL;
-  				rt->indirection = NIL;
-  				rt->val = (Node *)makeColumnRef("res", NIL, @1, yyscanner);;
-  				rt->location = @1;
+      a_expr
+        {
+          ResTarget *rt = makeNode(ResTarget);
+          RangeVar *from = NULL;
+          Node *colref = NULL;
+          A_Expr *where = NULL;
+          SelectStmt *n = makeNode(SelectStmt);
+        
+          /* target_el */
+          rt->name = NULL;
+          rt->indirection = NIL;
+          rt->val = (Node *)makeColumnRef("res", NIL, @1, yyscanner);;
+          rt->location = @1;
   
-                /* table_ref */
-                from = makeRangeVar(NULL, "thanks", @1);
-				from->inhOpt = INH_DEFAULT;
-				from->alias = NULL;
-					
-				/* where clause */
-				colref = (Node *) makeColumnRef("req", NIL, @1, yyscanner);
-				where = makeSimpleA_Expr(AEXPR_OP, "=", colref, $1, @1);
-				
-				/* Select Stmt */
-				n->distinctClause = NIL;
-				n->targetList = list_make1(rt);
-				n->intoClause = NULL;
-				n->fromClause = list_make1(from);
-				n->whereClause = (Node *) where;
-				n->groupClause = NIL;
-				n->havingClause = NULL;
-				n->windowClause = NIL;
-				n->isThanks = TRUE;
-				$$ = (Node *)n;
-			}
-		;
+          /* table_ref */
+          from = makeRangeVar(NULL, "thanks", @1);
+          from->inhOpt = INH_DEFAULT;
+          from->alias = NULL;
+          
+          /* where clause */
+          colref = (Node *) makeColumnRef("req", NIL, @1, yyscanner);
+          where = makeSimpleA_Expr(AEXPR_OP, "=", colref, $1, @1);
+        
+          /* Select Stmt */
+          n->distinctClause = NIL;
+          n->targetList = list_make1(rt);
+          n->intoClause = NULL;
+          n->fromClause = list_make1(from);
+          n->whereClause = (Node *) where;
+          n->groupClause = NIL;
+          n->havingClause = NULL;
+          n->windowClause = NIL;
+          n->isThanks = TRUE;
+          $$ = (Node *)n;
+        }
+      ;
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 SelectStmtへのメンバの追加
