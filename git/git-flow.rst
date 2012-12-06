@@ -16,15 +16,15 @@ gitとgit-flowの環境を構築したい方は :ref:`git-flow-install-label` �
 git-flowという考え方
 *********************
 
-git-flowについて知るには `git-flowによるブランチの管理`_ [#git-flow-link]_ を参照しましょう(丸投げ。このサイトでは次のように説明があります。要するに、Gitブランチをどのように運用するかを決めたイケてるガイドラインの一つです。[#guide-line]_
+git-flowについて知るには `git-flowによるブランチの管理`_ [#git-flow-link]_ を参照しましょう(丸投げ)。このサイトでは次のように説明があります。要するに、Gitブランチをどのように運用するかを決めたイケてるガイドラインの一つです。[#guide-line]_
 
 .. _git-flowによるブランチの管理 : http://www.oreilly.co.jp/community/blog/2011/11/branch-model-with-git-flow.html
 .. [#git-flow-link] http://www.oreilly.co.jp/community/blog/2011/11/branch-model-with-git-flow.html
-.. [#guide-line] ブランチモデルのデザインパターンの一つぐらいで考えてもらったらいいと思います。こんなパターンはクソだと思う人は既存パターンを改良したり新しくパターンを作ればよいのです。
+.. [#guide-line] ブランチモデルのデザインパターンの一つぐらいで考えてもらったらいいと思います
 
 .. topic:: git-flowによるブランチの管理から引用
 
-   git-flow は Vincent Driessen 氏によって書かれた `A successful Git branching model`_ [#git-flow-branching-model]_ (`O-Show 氏による日本語訳`_ [#git-flow-branching-model-ja]_ ) というブランチモデルを補助するための git 拡張です。 git-flow を利用する前には、まずこの文章を一読することをおすすめします。 その骨子については、 Voluntas 氏のブログ が参考になります。
+   git-flow は Vincent Driessen 氏によって書かれた `A successful Git branching model`_ [#git-flow-branching-model]_ (`O-Show 氏による日本語訳`_ [#git-flow-branching-model-ja]_ ) というブランチモデルを補助するための git 拡張です。 git-flow を利用する前には、まずこの文章を一読することをおすすめします。 その骨子については、 Voluntas 氏のブログ が参考になります
 
 .. _A successful Git branching model : http://nvie.com/posts/a-successful-git-branching-model/
 .. [#git-flow-branching-model] http://nvie.com/posts/a-successful-git-branching-model/
@@ -36,7 +36,7 @@ git-flowについて知るには `git-flowによるブランチの管理`_ [#git
 ブランチの種類
 ================
 
-``git-flow`` では原則的セントラルリポジトリは1つです。それに伴い ``origin`` 上の ``master`` も唯一無二ということになります。
+``git-flow`` では原則的にセントラルリポジトリは1つです。それに伴い ``origin`` 上の ``master`` も唯一無二ということになります。
 
 その ``origin`` 上の ``master`` ブランチの定義ですが、プロダクションリリースのためブランチです。リリースしたらタグ付けもします。 ``master`` ブランチは安定しているリリース版がコミットされているので、普段の開発では ``develop`` ブランチを利用します。常に最新の開発版がコミットされているブランチです。リリースの準備ができたら ``master`` ブランチにマージします。リリース前はこのブランチが最新バージョンとなる。これらのメインブランチは常に存在します。
 
@@ -286,7 +286,7 @@ releaseブランチを終了する
   - Release branch has been back-merged into 'develop'
 
 
-このコマンドを実行すると、最初に ``release/1.0.0`` ブランチの変更を ``master`` ブランチに取り込むマージが実行されます(``git checkout master; git merge --no-ff release/1.0.0`` 相当)。次にそのリビジョンでタグを作成します(``git tag 1.0.0`` 相当)。タグ名はfinishの後に指定したバージョン番号です。次に ``release/1.0.0`` ブランチの変更を ``develop`` ブランチに取り込むマージが実行されます(``git checkout develop; git merge --no-ff release/1.0.0`` 相当)。最後の ``release/1.0.0`` ブランチを削除します。
+このコマンドを実行すると、最初に ``release/1.0.0`` ブランチの変更を ``master`` ブランチに取り込むマージが実行されます(``git checkout master; git merge --no-ff release/1.0.0`` 相当)。次にそのリビジョンでタグを作成します(``git tag 1.0.0`` 相当)。タグ名はfinishの後に指定したバージョン番号です。次に ``release/1.0.0`` ブランチの変更を ``develop`` ブランチに取り込むマージが実行されます(``git checkout develop; git merge --no-ff release/1.0.0`` 相当)。最後に ``release/1.0.0`` ブランチを削除します。
 ログは次のとおりになります。
 
 .. figure:: git-flow-img/release-finish.eps
@@ -426,7 +426,7 @@ homebrewを使ってインストールし、バージョンを確認できれば
 .. code-block:: console
 
   $ git config --global user.name "あなたの名前"
-  $ git config --global user.email your_name@dwango.co.jp
+  $ git config --global user.email your_name@hoge.com
 
 ---------------------------
 git-flowをインストールする
