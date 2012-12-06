@@ -180,7 +180,7 @@ PG_KEYWORDの第3引数はキーワードの値を名前として使用可能な
   PG_KEYWORD("then", THEN, RESERVED_KEYWORD)
   ...
 
-　　　図2 文字列"thanks"をキーワードとして登録 (src/include/parser/kwlist.h)
+　　　　図2 文字列"thanks"をキーワードとして登録 (src/include/parser/kwlist.h)
 
 次に構文解析器へ"thanks"の処理を加えていきます。
 gram.yで、図3のように、トークン型としてTHANKSを宣言します。
@@ -197,7 +197,7 @@ gram.yで、図3のように、トークン型としてTHANKSを宣言します�
     TABLE TABLES TABLESPACE TEMP TEMPLATE TEMPORARY TEXT_P THANKS
     ...
 
-　　　図3 Bison宣言部でトークン型としてTHANKSを定義
+　　　　　　図3 Bison宣言部でトークン型としてTHANKSを定義
 
 ~~~~~~~~~~~~~~~~
 ステートメントの定義
@@ -216,7 +216,7 @@ gram.yで、図3のように、トークン型としてTHANKSを宣言します�
   非終端記号: ルール1 (非終端記号, 終端記号, その組み合わせ) { アクション (C言語で記述) }
          | ルール2 (複数のルールを並べて定義) { アクション (ルール適用された方を実行) }
 
-　　　図4 Bison文法規則の書式
+　　　　　　　　　　図4 Bison文法規則の書式
 
 ::
 
@@ -225,7 +225,7 @@ gram.yで、図3のように、トークン型としてTHANKSを宣言します�
       | from_list ',' table_ref	    { $$ = lappend($1, $3); }
     ;
 
-　　　図5 再帰的規則を使ったfrom_listの規則
+　　　　　　　図5 再帰的規則を使ったfrom_listの規則
 
 非終端記号の宣言は、Bison宣言部で図6のように%typeを用いて宣言します。
 <node>はここで宣言される非終端記号がNode型(構文木の1ノード)であることを表しています。
@@ -237,7 +237,7 @@ gram.yで、図3のように、トークン型としてTHANKSを宣言します�
     SecLabelStmt SelectStmt TransactionStmt TruncateStmt ThanksStmt
     ...
 
-　　　図6 Bison宣言部でThanksStmt
+　　　　　　図6 Bison宣言部でThanksStmtの宣言を追加
 
 次に図7では、stmtの規則としてThanksStmtを追加しています。
 stmtにはセミコロン(;)で区切られたクエリ1文が入ってきます。
@@ -252,7 +252,7 @@ stmtにはセミコロン(;)で区切られたクエリ1文が入ってきます
 			| ThanksStmt
 			...
 
-　　　図7 文法規則部にstmtの規則としてThanksStmtを追加
+　　　　　図7 文法規則部にstmtの規則としてThanksStmtを追加
 
 ~~~~~~~~~~~~~~~~
 ThanksStmtの定義
@@ -337,5 +337,5 @@ psqlからTHANKS文を発行してみると、下記のようなお返事がサ�
 独自の構文拡張が出来たので、今度はエグゼキュータの拡張もテーマにしていきたいなぁと考えています。
 それでは！
 
-.. [#postgresql_github] 今回作成したソースコードはhttps://github.com/ijust/ThankYouPostgreSQLで公開する予定です。
+.. [#postgresql_github] 今回作成したソースコードはhttps://github.com/ijust/ThankYouPostgreSQLで公開します。
 
