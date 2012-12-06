@@ -43,7 +43,7 @@
   # THANKS, postgres
   You're welcome!
 
-返答の内容については、簡単のため、図\ref{}のように「thanks」というテーブルと、対話用のデータを予め作っておいて、
+返答の内容については、簡単のため、下記のように「thanks」というテーブルと、対話用のデータを予め作っておいて、
 「THANKS, (req列にあるキーワード)」とクエリが来たら、該当する行のres列のデータを返すようにします。
 
 .. code-block:: sql
@@ -54,8 +54,6 @@
   );
   INSERT INTO thanks (req, res) VALUES ('postgres', E'You\'re welcome!');
   INSERT INTO thanks (req, res) VALUES ('a lot!', 'Not at all!');
-
-図 thanksテーブルの定義と挿入したデータ
 
 ======
  実装
@@ -116,7 +114,7 @@ PostgreSQLでは"src/backend/parser/"以下のscan.lとgram.yにそれぞれ、�
 
 .. [#postgresql_flex_bison] 開発環境にはflexとBisonを入れておきましょう。配布されているPostgreSQLのソースコードには生成済みのscan.c, gram.c, gram.hは既に含まれていて、flex,Bisonが使用できない場合には字句・構文解析器の再生成は行われません。
 
-Bison文法ファイルは図¥ref{}のような4つの主要な部分から成り、gram.yもこれに従って記述されています。
+Bison文法ファイルは図1のような4つの主要な部分から成り、gram.yもこれに従って記述されています。
 各部分の書き方は実際にTHANKSコマンドを実装する過程で必要な部分だけ見ていこうと思います。
 
 ::
@@ -139,7 +137,7 @@ Bison文法ファイルは図¥ref{}のような4つの主要な部分から成�
   (Epilogueの記述は生成されるパーサの実装ファイルの最後にコピーされます。
   文法規則では使用しないがパーサの実装に必要な処理をC言語で書くことが出来ます。)
 
-図 Bison文法ファイルの概要 (Bisonマニュアルより引用、日本語部分は筆者加筆)
+図1 Bison文法ファイルの概要 (Bisonマニュアルより引用、日本語部分は筆者加筆)
 
 ~~~~~~~~~~~~~~~~
 キーワードの登録
@@ -160,7 +158,7 @@ THANKSコマンドの実装のためには、クエリの冒頭に置く"THANKS"
 .. [#postgresql_token] 1,2,3...は整数という括りで分類されますが、SELECTは「SELECT」として分類されるのです！
 .. [#postgresql_scan] scan.lにその実装があります。
 
-そういう訳で、"THANKS"をSELECTと同様に特別な終端記号として字句解析されるように、キーワードに登録します。(図¥ref{})
+そういう訳で、"THANKS"をSELECTと同様に特別な終端記号として字句解析されるように、キーワードに登録します。(図2)
 このkwlist.hは、字句解析器と構文解析器の両方から参照され、キーワードを共有しています。
 PG_KEYWORDの第2引数はトークン型の値を表す定数で、THANKSという定数はgram.yで定義します。
 PG_KEYWORDの第3引数はキーワードの値を名前として使用可能な範囲を設定しています。選択可能な値は下記の4種類があります。
@@ -183,10 +181,10 @@ PG_KEYWORDの第3引数はキーワードの値を名前として使用可能な
   PG_KEYWORD("then", THEN, RESERVED_KEYWORD)
   ...
 
-図 文字列"thanks"をキーワードとして登録 (src/include/parser/kwlist.h)
+図2 文字列"thanks"をキーワードとして登録 (src/include/parser/kwlist.h)
 
 次に構文解析器へ"thanks"の処理を加えていきます。
-gram.yで、図¥ref{}のように、トークン型としてTHANKSを宣言します。
+gram.yで、図3のように、トークン型としてTHANKSを宣言します。
 %tokenで宣言したトークン型には、構文解析器生成時にgram.h内の#defineディレクティブで他のトークン型と衝突しないように数値が割り振られます。[#postgresql_define_token_type]_
 <keyword>の部分は型識別子と呼ばれていて、gram.yの中で「const char *」と定義されており、続いて宣言されるトークン型の値も<keyword>と同じ型であることを表しています。
 
@@ -200,7 +198,7 @@ gram.yで、図¥ref{}のように、トークン型としてTHANKSを宣言し�
     TABLE TABLES TABLESPACE TEMP TEMPLATE TEMPORARY TEXT_P THANKS
     ...
 
-図 Bison宣言部でトークン型としてTHANKSを定義
+図3 Bison宣言部でトークン型としてTHANKSを定義
 
 ~~~~~~~~~~~~~~~~
 ステートメントの定義
@@ -208,8 +206,8 @@ gram.yで、図¥ref{}のように、トークン型としてTHANKSを宣言し�
 次にTHANKSコマンドのクエリ全体の規則を定義するための非終端記号として、ThanksStmtを宣言します。
 
 非終端記号は、構文的に等価な、(自分自身を含んでも良い)非終端記号や終端記号、その組み合わせのグループを表現した記号です。
-非終端記号の文法規則はGrammar rulesの領域に、図¥ref{}のような形式で記述されます。
-図¥ref{}は具体例でFROM句の直後で、そのクエリで使用するテーブル名を列挙出来るfrom_listの文法規則を記述しています。
+非終端記号の文法規則はGrammar rulesの領域に、図4のような形式で記述されます。
+図5は具体例でFROM句の直後で、そのクエリで使用するテーブル名を列挙出来るfrom_listの文法規則を記述しています。
 ここでは、再帰的規則を用いながらfrom_listをtable_refへ変換し解析していく様子が分かります。[#postgresql_from_list]_
 
 .. [#postgresql_from_list] SELECT * FROM A, B, C;のようにテーブルは複数指定出来ます。from_listはこの"A, B, C"の部分等に該当する非終端記号です。
@@ -219,7 +217,7 @@ gram.yで、図¥ref{}のように、トークン型としてTHANKSを宣言し�
   非終端記号: ルール1 (非終端記号, 終端記号, その組み合わせ) { アクション (C言語で記述) }
          | ルール2 (複数のルールを並べて定義) { アクション (ルール適用された方を実行) }
 
-図 Bison文法規則の書式
+図4 Bison文法規則の書式
 
 ::
 
@@ -228,9 +226,9 @@ gram.yで、図¥ref{}のように、トークン型としてTHANKSを宣言し�
       | from_list ',' table_ref		{ $$ = lappend($1, $3); }
     ;
 
-図 再帰的規則を使ったfrom_listの規則
+図5 再帰的規則を使ったfrom_listの規則
 
-非終端記号の宣言は、Bison宣言部で図¥ref{}のように%typeを用いて宣言します。
+非終端記号の宣言は、Bison宣言部で図6のように%typeを用いて宣言します。
 <node>はここで宣言される非終端記号がNode型(構文木の1ノード)であることを表しています。
 
 ::
@@ -240,9 +238,9 @@ gram.yで、図¥ref{}のように、トークン型としてTHANKSを宣言し�
     SecLabelStmt SelectStmt TransactionStmt TruncateStmt ThanksStmt
     ...
 
-図 Bison宣言部でThanksStmt
+図6 Bison宣言部でThanksStmt
 
-次に図¥ref{}では、stmtの規則としてThanksStmtを追加しています。
+次に図7では、stmtの規則としてThanksStmtを追加しています。
 stmtにはセミコロン(;)で区切られたクエリ1文が入ってきます。
 残る作業は、THANKSコマンドの仕様に沿ったクエリ1文(例: "THANKS, postgres")がstmtに入ってきた際に、ThanksStmtへマッチするように規則を定義すれば良さそうです。
 
@@ -255,12 +253,12 @@ stmtにはセミコロン(;)で区切られたクエリ1文が入ってきます
 			| ThanksStmt
 			...
 
-図 文法規則部にstmtの規則としてThanksStmtを追加
+図7 文法規則部にstmtの規則としてThanksStmtを追加
 
 ~~~~~~~~~~~~~~~~
 ThanksStmtの定義
 ~~~~~~~~~~~~~~~~
-図¥ref{}にThanksStmtの文法規則を記述してみました。
+ThanksStmtの文法規則を記述してみました。
   
 .. code-block:: c
   
@@ -313,7 +311,7 @@ $$はこの非終端記号の意味値(Semantic Value)です。$nは右辺に書
 
 thanks_cmdは新たに宣言した非終端記号です。[#postgresql_thanks_cmd]_
 thanks_cmdの文法規則はa_exprと等価ですが、アクションではSelectStmtから検索用の構文木のノードを生成しています。
-また、THANKSコマンドではユーザからresと比較する値以外のデータは与えられませんので、下記のクエリと同等の構文木になるように検索ノードに必要なパラメータを補っています。
+また、THANKSコマンドではユーザからreqの絞り込みに使用する値以外のデータは与えられませんので、下記のクエリと同等の構文木になるように検索ノードに必要なパラメータを補っています。
 
 ::
 
