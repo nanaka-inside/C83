@@ -137,7 +137,7 @@ Bison文法ファイルは図1のような4つの主要な部分から成り、g
   (Epilogueの記述は生成されるパーサの実装ファイルの最後にコピーされます。
   文法規則では使用しないがパーサの実装に必要な処理をC言語で書くことが出来ます。)
 
-図1 Bison文法ファイルの概要 (Bisonマニュアルより引用、日本語部分は筆者加筆)
+　　図1 Bison文法ファイルの概要 (Bisonマニュアルより引用、日本語部分は筆者加筆)
 
 ~~~~~~~~~~~~~~~~
 キーワードの登録
@@ -181,7 +181,7 @@ PG_KEYWORDの第3引数はキーワードの値を名前として使用可能な
   PG_KEYWORD("then", THEN, RESERVED_KEYWORD)
   ...
 
-図2 文字列"thanks"をキーワードとして登録 (src/include/parser/kwlist.h)
+　　図2 文字列"thanks"をキーワードとして登録 (src/include/parser/kwlist.h)
 
 次に構文解析器へ"thanks"の処理を加えていきます。
 gram.yで、図3のように、トークン型としてTHANKSを宣言します。
@@ -198,7 +198,7 @@ gram.yで、図3のように、トークン型としてTHANKSを宣言します�
     TABLE TABLES TABLESPACE TEMP TEMPLATE TEMPORARY TEXT_P THANKS
     ...
 
-図3 Bison宣言部でトークン型としてTHANKSを定義
+　　図3 Bison宣言部でトークン型としてTHANKSを定義
 
 ~~~~~~~~~~~~~~~~
 ステートメントの定義
@@ -206,7 +206,7 @@ gram.yで、図3のように、トークン型としてTHANKSを宣言します�
 次にTHANKSコマンドのクエリ全体の規則を定義するための非終端記号として、ThanksStmtを宣言します。
 
 非終端記号は、構文的に等価な、(自分自身を含んでも良い)非終端記号や終端記号、その組み合わせのグループを表現した記号です。
-非終端記号の文法規則はGrammar rulesの領域に、図4のような形式で記述されます。
+非終端記号の文法規則は、文法ファイルのGrammar rulesの領域に、図4のような形式で記述されます。
 図5は具体例でFROM句の直後で、そのクエリで使用するテーブル名を列挙出来るfrom_listの文法規則を記述しています。
 ここでは、再帰的規則を用いながらfrom_listをtable_refへ変換し解析していく様子が分かります。[#postgresql_from_list]_
 
@@ -217,7 +217,7 @@ gram.yで、図3のように、トークン型としてTHANKSを宣言します�
   非終端記号: ルール1 (非終端記号, 終端記号, その組み合わせ) { アクション (C言語で記述) }
          | ルール2 (複数のルールを並べて定義) { アクション (ルール適用された方を実行) }
 
-図4 Bison文法規則の書式
+　　図4 Bison文法規則の書式
 
 ::
 
@@ -226,7 +226,7 @@ gram.yで、図3のように、トークン型としてTHANKSを宣言します�
       | from_list ',' table_ref		{ $$ = lappend($1, $3); }
     ;
 
-図5 再帰的規則を使ったfrom_listの規則
+　　図5 再帰的規則を使ったfrom_listの規則
 
 非終端記号の宣言は、Bison宣言部で図6のように%typeを用いて宣言します。
 <node>はここで宣言される非終端記号がNode型(構文木の1ノード)であることを表しています。
@@ -238,7 +238,7 @@ gram.yで、図3のように、トークン型としてTHANKSを宣言します�
     SecLabelStmt SelectStmt TransactionStmt TruncateStmt ThanksStmt
     ...
 
-図6 Bison宣言部でThanksStmt
+　　図6 Bison宣言部でThanksStmt
 
 次に図7では、stmtの規則としてThanksStmtを追加しています。
 stmtにはセミコロン(;)で区切られたクエリ1文が入ってきます。
@@ -253,7 +253,7 @@ stmtにはセミコロン(;)で区切られたクエリ1文が入ってきます
 			| ThanksStmt
 			...
 
-図7 文法規則部にstmtの規則としてThanksStmtを追加
+　　図7 文法規則部にstmtの規則としてThanksStmtを追加
 
 ~~~~~~~~~~~~~~~~
 ThanksStmtの定義
@@ -320,10 +320,12 @@ thanks_cmdの文法規則はa_exprと等価ですが、アクションではSele
 .. [#postgresql_thanks_cmd] 紙面では宣言部分の記述は省略しています。
 
 
---------
-実行結果
---------
-さて、psqlからTHANKS文を発行してみると、下記のようなお返事がサーバから返ってきました！やったね！
+======
+終わりに
+======
+最後に、THANKSコマンドがちゃんと動くか、確かめてみましょう。[#postgresql_github]_
+
+psqlからTHANKS文を発行してみると、下記のようなお返事がサーバから返ってきました！やったね！
 
 ::
 
@@ -333,7 +335,8 @@ thanks_cmdの文法規則はa_exprと等価ですが、アクションではSele
    You're welcome!
   (1 row)
 
-======
-終わりに
-======
+独自の構文拡張が出来たので、今度はエグゼキュータの拡張もテーマにしていきたいなぁと考えています。
+それでは！
+
+.. [#postgresql_github] 今回作成したソースコードはhttps://github.com/ijust/ThankYouPostgreSQLで公開する予定です。
 
