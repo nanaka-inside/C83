@@ -197,7 +197,7 @@ gram.yで、図3のように、トークン型としてTHANKSを宣言します�
     TABLE TABLES TABLESPACE TEMP TEMPLATE TEMPORARY TEXT_P THANKS
     ...
 
-　　　　　　　　　　　図3 Bison宣言部でトークン型としてTHANKSを定義
+　　　　　　　　　 図3 Bison宣言部でトークン型としてTHANKSを定義
 
 ~~~~~~~~~~~~~~~~
 ステートメントの定義
@@ -216,7 +216,7 @@ gram.yで、図3のように、トークン型としてTHANKSを宣言します�
   非終端記号: ルール1 (非終端記号, 終端記号, その組み合わせ) { アクション (C言語で記述) }
          | ルール2 (複数のルールを並べて定義) { アクション (ルール適用された方を実行) }
 
-　　　　　　　　　　　　　　　　図4 Bison文法規則の書式
+　　　　　　　　　　　　　　　図4 Bison文法規則の書式
 
 ::
 
@@ -225,7 +225,7 @@ gram.yで、図3のように、トークン型としてTHANKSを宣言します�
       | from_list ',' table_ref	    { $$ = lappend($1, $3); }
     ;
 
-　　　　　　　　　　　　図5 再帰的規則を使ったfrom_listの文法規則
+　　　　　　　　　　　図5 再帰的規則を使ったfrom_listの文法規則
 
 非終端記号の宣言は、Bison宣言部で図6のように%typeを用いて宣言します。
 <node>はここで宣言される非終端記号がNode型(構文木の1ノード)であることを表しています。
@@ -237,7 +237,7 @@ gram.yで、図3のように、トークン型としてTHANKSを宣言します�
     SecLabelStmt SelectStmt TransactionStmt TruncateStmt ThanksStmt
     ...
 
-　　　　　　　　　　　　図6 Bison宣言部でThanksStmtの宣言を追加
+　　　　　　　　　　　図6 Bison宣言部でThanksStmtの宣言を追加
 
 次に図7では、stmtの規則としてThanksStmtを追加しています。
 stmtにはセミコロン(;)で区切られたクエリ1文が入ってきます。
@@ -252,7 +252,7 @@ stmtにはセミコロン(;)で区切られたクエリ1文が入ってきます
 			| ThanksStmt
 			...
 
-　　　　　　　　　　図7 文法規則部にstmtの規則としてThanksStmtを追加
+　　　　　　　　　図7 文法規則部にstmtの規則としてThanksStmtを追加
 
 ~~~~~~~~~~~~~~~~
 ThanksStmtの定義
