@@ -330,7 +330,7 @@ thanks_cmdの文法規則はa_exprと等価ですが、アクションではSele
 
 ijust3=# THANKS, 'postgres';
        res       
------------------
+``-----------------``
  You're welcome!
 (1 row)
 
