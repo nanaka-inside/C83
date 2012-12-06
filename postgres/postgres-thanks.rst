@@ -174,13 +174,6 @@ PG_KEYWORDの第3引数はキーワードの値を名前として使用可能な
 
 .. code-block:: c
 
-  /*
-   * List of keyword (name, token-value, category) entries.
-   *
-   * !!WARNING!!: This list must be sorted by ASCII name, because binary
-   *		 search is used to locate entries.
-   */
-  
   /* name, value, category */
   PG_KEYWORD("abort", ABORT_P, UNRESERVED_KEYWORD)
   ...
@@ -223,7 +216,7 @@ gram.yで、図¥ref{}のように、トークン型としてTHANKSを宣言し�
 ::
 
   非終端記号: ルール1 (非終端記号, 終端記号, その組み合わせ) { アクション (C言語で記述) }
-         | ルール2 (複数のルールを定義する場合、並べて書く事が出来る) { アクション (ルールの適用された方が実行される) }
+         | ルール2 (複数のルールを並べて定義) { アクション (ルール適用された方を実行) }
 
 図 Bison文法規則の書式
 
@@ -308,7 +301,6 @@ ThanksStmtの定義
           n->groupClause = NIL;
           n->havingClause = NULL;
           n->windowClause = NIL;
-          n->isThanks = TRUE;
           $$ = (Node *)n;
         }
       ;
@@ -323,17 +315,31 @@ thanks_cmdの文法規則はa_exprと等価ですが、アクションではSele
 また、THANKSコマンドではユーザからresと比較する値以外のデータは与えられませんので、下記のクエリと同等の構文木になるように検索ノードに必要なパラメータを補っています。
 
 ::
+
   SELECT res FROM thanks WHERE req = $1;
 
 .. [#postgresql_thanks_cmd] 紙面では宣言部分の記述は省略しています。
 
 
 --------
+実行結果
+--------
+さて、psqlからTHANKS文を発行してみると、下記のようなお返事がサーバから返ってきました！やったね！
+
+::
+
+ijust3=# THANKS, 'postgres';
+       res       
+-----------------
+ You're welcome!
+(1 row)
+
+======
 終わりに
---------
+======
 
 
---------
+======
 参考文献
---------
+======
 
