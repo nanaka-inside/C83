@@ -222,8 +222,8 @@ gram.yで、図3のように、トークン型としてTHANKSを宣言します�
 ::
 
   from_list:
-      table_ref						{ $$ = list_make1($1); }
-      | from_list ',' table_ref		{ $$ = lappend($1, $3); }
+      table_ref                     { $$ = list_make1($1); }
+      | from_list ',' table_ref	    { $$ = lappend($1, $3); }
     ;
 
 　　図5 再帰的規則を使ったfrom_listの規則
