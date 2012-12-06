@@ -27,11 +27,12 @@
   (tboffice) あーあ刺さっちゃった
 
 さて、「御利益のあるバイト列を回転させる方法は分かりませんが、独自の命令を実装することなら出来ますよ!」ということで、
-「PostgreSQLとお話したい!」というtbofficeさんの熱い期待に応えるため、[#postgresql_tboffice]_
+「PostgreSQLとお話したい!」というtbofficeさんの熱い期待に応えるため、[#postgresql_tboffice]_ [#postgresql_tbofficea]_
 今回はPostgreSQLで一問一答が出来るような簡単な機能で、独自の構文拡張について書くことにしました。
 
 .. [#postgresql_real] 実話です
 .. [#postgresql_tboffice] この解釈で合っていたのだろうか？
+.. [#postgresql_tbofficea] 大きく間違ってはいない..と思う(by tboffice)
 
 ==========
  作るもの
