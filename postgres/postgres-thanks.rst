@@ -55,7 +55,7 @@
   INSERT INTO thanks (req, res) VALUES ('postgres', E'You\'re welcome!');
   INSERT INTO thanks (req, res) VALUES ('a lot!', 'Not at all!');
 
-  図 thanksテーブルの定義と挿入したデータ
+図 thanksテーブルの定義と挿入したデータ
 
 ======
  実装
@@ -78,13 +78,12 @@
 まずは、今回の変更箇所を明確にするため、サーバ側でのクエリ処理全体の流れについて簡単に紹介します。
 
 通常、PostgreSQLサーバの起動にはpostgresかpg_ctlを使用すると思います [#postgresql_server_start]_ [#postgresql_pg_ctl]_ 。
-
-.. [#postgresql_server_start] http://www.postgresql.jp/document/9.2/html/server-start.html
-.. [#postgresql_pg_ctl] pg_ctlは内部でsystem()からpostgresコマンドを呼び出して、PostgreSQLサーバを起動させています。
-
 postgresのエントリポイントであるmain関数は"src/backend/main/main.c"にあります。
 postgresは起動すると一連の初期化処理を行った後、クライアントからの接続を待つループ処理に入ります。
 クライアントからの接続を受けるとpostgresはforkし、子プロセスがクライアントからのクエリを処理します。
+
+.. [#postgresql_server_start] http://www.postgresql.jp/document/9.2/html/server-start.html
+.. [#postgresql_pg_ctl] pg_ctlは内部でsystem()からpostgresコマンドを呼び出して、PostgreSQLサーバを起動させています。
 
 クエリ処理は大まかに次のような流れになります。
 
@@ -93,14 +92,16 @@ postgresは起動すると一連の初期化処理を行った後、クライア
 2. 意味解析・リライト
   構文木からクエリ木 [#postgresql_query_tree]_ を生成と、ルール条件に従ったクエリの書き換え（例えばVIEWの適用など）を行います。
 3. 実行計画の作成・最適化
-  クエリ木からプラン木（実行計画）を作成します。
+  クエリ木からプラン木（実行計画）[#postgresql_plan_tree]_を作成します。
   実行計画は基本的にはルールベース・コストベース [#postgresql_plan]_ ・結合順序の組み合わせ [#postgresql_plan2]_ で決定されます。
 4. 実行
   決定されたプラン木を基に、処理を実行していきます。
 
+.. [#postgresql_plan_tree] EXPLAIN文の実行結果として表示されるツリーがプラン木です。
 .. [#postgresql_query_tree] SQL文の内部表現です。PostgreSQLサーバ起動時にデバッグレベルを設定することで簡単に見ることが出来ます。デバッグレベルは"-d"オプションで、"$ postgres -d5"等と指定します。(5が最大です。) クエリ木については、マニュアルにも記述があります。http://www.postgresql.org/docs/9.2/static/querytree.html
 .. [#postgresql_plan] 例えばテーブルを結合する際に、入れ子結合・マージ結合・ハッシュ結合が使えるが、どれが一番速く処理できるか、と言った推測をします。
 .. [#postgresql_plan2] 使用するリレーションが3つ以上の場合。
+
 
 新しいコマンド作成のために、まず、構文解析器を拡張する必要がありそうですね。早速やってみましょう。
 
@@ -212,10 +213,10 @@ gram.yで、図¥ref{}のように、トークン型としてTHANKSを宣言し�
 ~~~~~~~~~~~~~~~~
 次にTHANKSコマンドのクエリ全体の規則を定義するための非終端記号として、ThanksStmtを宣言します。
 
-非終端記号は、構文的に等価な、(自分自身を含んでも良い)非終端記号や終端記号、その組み合わせへ置き換えが可能な記号です。
-置き換えの規則はGrammar rulesの領域に、図¥ref{}のような形式で記述されます。
+非終端記号は、構文的に等価な、(自分自身を含んでも良い)非終端記号や終端記号、その組み合わせのグループを表現した記号です。
+非終端記号の文法規則はGrammar rulesの領域に、図¥ref{}のような形式で記述されます。
 図¥ref{}は具体例でFROM句の直後で、そのクエリで使用するテーブル名を列挙出来るfrom_listの文法規則を記述しています。
-ここでは、再帰的規則を用いながらfrom_listをtable_refへ変換し解析していく様子が見られます。[#postgresql_from_list]_
+ここでは、再帰的規則を用いながらfrom_listをtable_refへ変換し解析していく様子が分かります。[#postgresql_from_list]_
 
 .. [#postgresql_from_list] SELECT * FROM A, B, C;のようにテーブルは複数指定出来ます。from_listはこの"A, B, C"の部分等に該当する非終端記号です。
 
@@ -265,8 +266,7 @@ stmtにはセミコロン(;)で区切られたクエリ1文が入ってきます
 ~~~~~~~~~~~~~~~~
 ThanksStmtの定義
 ~~~~~~~~~~~~~~~~
-図¥ref{}は
-
+図¥ref{}にThanksStmtの文法規則を記述してみました。
   
 .. code-block:: c
   
@@ -284,18 +284,18 @@ ThanksStmtの定義
           A_Expr *where = NULL;
           SelectStmt *n = makeNode(SelectStmt);
         
-          /* target_el */
+          /* 取得するカラムとして"res"を指定 */
           rt->name = NULL;
           rt->indirection = NIL;
           rt->val = (Node *)makeColumnRef("res", NIL, @1, yyscanner);;
           rt->location = @1;
   
-          /* table_ref */
+          /* 検索対象のテーブルとして"thanks"を指定 */
           from = makeRangeVar(NULL, "thanks", @1);
           from->inhOpt = INH_DEFAULT;
           from->alias = NULL;
           
-          /* where clause */
+          /* 絞り込み条件として req = a_exprになるように指定 */
           colref = (Node *) makeColumnRef("req", NIL, @1, yyscanner);
           where = makeSimpleA_Expr(AEXPR_OP, "=", colref, $1, @1);
         
@@ -314,6 +314,18 @@ ThanksStmtの定義
       ;
 
 
+2,3行目は"THANKS"の文字列の後にコンマを付けても付けなくても動作するようにしてみました。
+ここで{}に囲われたアクションの実装が異なるのに気がつくかと思います。
+$$はこの非終端記号の意味値(Semantic Value)です。$nは右辺に書かれたルールのn番目の記号の意味値を表します。
+
+thanks_cmdは新たに宣言した非終端記号です。[#postgresql_thanks_cmd]_
+thanks_cmdの文法規則はa_exprと等価ですが、アクションではSelectStmtから検索用の構文木のノードを生成しています。
+また、THANKSコマンドではユーザからresと比較する値以外のデータは与えられませんので、下記のクエリと同等の構文木になるように検索ノードに必要なパラメータを補っています。
+
+::
+  SELECT res FROM thanks WHERE req = $1;
+
+.. [#postgresql_thanks_cmd] 紙面では宣言部分の記述は省略しています。
 
 
 --------
@@ -321,4 +333,7 @@ ThanksStmtの定義
 --------
 
 
+--------
+参考文献
+--------
 
