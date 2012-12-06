@@ -20,3 +20,4 @@ Welcome to Nanaka-inside-c83's documentation!
    irc/irc.rst
    coreutils/coreutils.rst
    postgres/postgres-thanks.rst
+   
