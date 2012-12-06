@@ -75,13 +75,14 @@
 ----------------
 クエリ処理の概要
 ----------------
-まずは、今回の変更箇所を明確にするため、サーバ側でのクエリ処理全体の流れについて簡単に紹介します。
+まずは、今回の変更箇所を明確にするため、サーバ側でのクエリ処理全体の流れについて簡単に紹介します。 [#postgresql_flow]_ 
 
 通常、PostgreSQLサーバの起動にはpostgresかpg_ctlを使用すると思います [#postgresql_server_start]_ [#postgresql_pg_ctl]_ 。
 postgresのエントリポイントであるmain関数は"src/backend/main/main.c"にあります。
 postgresは起動すると一連の初期化処理を行った後、クライアントからの接続を待つループ処理に入ります。
 クライアントからの接続を受けるとpostgresはforkし、子プロセスがクライアントからのクエリを処理します。
 
+.. [#postgresql_flow] 若干変わってしまった箇所もあるのですが、ソースコードを追う際には大変参考になります。http://ikubo.x0.com/PostgreSQL/pg_source.htm
 .. [#postgresql_server_start] http://www.postgresql.jp/document/9.2/html/server-start.html
 .. [#postgresql_pg_ctl] pg_ctlは内部でsystem()からpostgresコマンドを呼び出して、PostgreSQLサーバを起動させています。
 
@@ -89,16 +90,16 @@ postgresは起動すると一連の初期化処理を行った後、クライア
 
 1. 字句・構文解析
   クエリとして受信した文字列を字句・構文解析し、構文木を生成します。
-2. 意味解析・リライト
+2. アナライズ・リライト
   構文木からクエリ木 [#postgresql_query_tree]_ を生成し、ルール条件に従ったクエリの書き換え（例えばVIEWの適用など）を行います。
 3. 実行計画の作成・最適化
-  クエリ木からプラン木（実行計画）[#postgresql_plan_tree]_を作成します。
+  クエリ木からプラン木（実行計画） [#postgresql_plan_tree]_ を作成します。
   実行計画は基本的にはルールベース・コストベース [#postgresql_plan]_ ・結合順序の組み合わせ [#postgresql_plan2]_ で決定されます。
 4. 実行
   決定されたプラン木を基に、処理を実行していきます。
 
-.. [#postgresql_plan_tree] EXPLAIN文の実行結果として表示されるツリーがプラン木です。
 .. [#postgresql_query_tree] SQL文の内部表現です。PostgreSQLサーバ起動時にデバッグレベルを設定することで簡単に見ることが出来ます。デバッグレベルは"-d"オプションで、"$ postgres -d5"等と指定します。(5が最大です。) クエリ木については、マニュアルにも記述があります。http://www.postgresql.org/docs/9.2/static/querytree.html
+.. [#postgresql_plan_tree] EXPLAIN文の実行結果として表示されるツリーがプラン木です。
 .. [#postgresql_plan] 例えばテーブルを結合する際に、入れ子結合・マージ結合・ハッシュ結合が使えるが、どれが一番速く処理できるか、と言った推測をします。
 .. [#postgresql_plan2] 使用するリレーションが3つ以上の場合。
 
@@ -336,10 +337,5 @@ thanks_cmdの文法規則はa_exprと等価ですが、アクションではSele
 
 ======
 終わりに
-======
-
-
-======
-参考文献
 ======
 
