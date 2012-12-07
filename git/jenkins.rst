@@ -118,7 +118,6 @@ git-hooksで自動テスト実行
 Jenkinsのビルドを実行するにはJenkinsの起動しているサーバに対してhttp getを送ることで実行できます。
 
 .. code-block:: bash
-  :linenos:
 
   #!/bin/sh
   BASE_URL=http://<TOMCAT_SERVER>:8080/jenkins/job/<JOB_NAME>
