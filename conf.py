@@ -217,6 +217,7 @@ latex_elements = {
 
 """,
 'classoptions': ',twoside,openany',
+'babel': '\usepackage[english]{babel}',
 'maketitle': '',
 'tableofcontents': r"""
 \thispagestyle{normal}
