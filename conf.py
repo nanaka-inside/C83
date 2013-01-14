@@ -82,7 +82,8 @@ exclude_patterns = ['_build']
 #show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+#pygments_style = 'sphinx'
+pygments_style = 'bw'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
@@ -184,28 +185,45 @@ latex_elements = {
   #\\global\\@topnum\\z@\n\
   #\\secdef\\@chapter\\@schapter}\n\
 #\\makeatother',
-'preamble': u"""\pagenumbering{arabic}
-\\pagestyle{fancy}
-\\lhead[\\rightmark]{}
-\\chead[]{}
-\\rhead[]{\\rightmark}
-\\lfoot[ななか +inside press ◆ \\thepage]{}
-\\cfoot[]{}
-\\rfoot[]{ななか +inside press ◆ \\thepage}
-\\setlength{\\textheight}{\\paperheight}
-\\setlength{\\topmargin}{-5.4truemm}
-\\addtolength{\\topmargin}{-\\headheight}
-\\addtolength{\\topmargin}{-\\headsep}
-\\addtolength{\\textheight}{-40truemm}
+'preamble': ur"""
+\fancypagestyle{normal}{
+\fancyhf{}
+\fancyhead[LE,RO]{\nouppercase{\rightmark}}
+\fancyfoot[LE,RO]{ななか +inside press ◆ \thepage}
+}
+\fancypagestyle{plain}{
+\fancyhf{}
+\fancyfoot[LE,RO]{ななか +inside press ◆ \thepage}
+\renewcommand{\headrulewidth}{0pt}
+}
+\renewcommand{\plainifnotempty}{\thispagestyle{plain}}
+\setlength{\textheight}{\paperheight}
+\setlength{\topmargin}{-5.4truemm}
+\addtolength{\topmargin}{-\headheight}
+\addtolength{\topmargin}{-\headsep}
+\addtolength{\textheight}{-40truemm}
 
-\\setlength{\\textwidth}{\\paperwidth}
-\\setlength{\\oddsidemargin}{-5.4truemm}
-\\setlength{\\evensidemargin}{-5.4truemm}
-\\addtolength{\\textwidth}{-40truemm}
-\setcounter{page}{4}
+\setlength{\textwidth}{\paperwidth}
+\setlength{\oddsidemargin}{-5.4truemm}
+\setlength{\evensidemargin}{-5.4truemm}
+\addtolength{\textwidth}{-40truemm}
+\hypersetup{colorlinks=false}
+\let\OrigVerbatim\OriginalVerbatim
+\renewcommand{\OriginalVerbatim}[1][1]{\OrigVerbatim[#1,frame=single]}
+\setlength\parindent{1zw}
+\setlength{\parskip}{0pt}
+\setcounter{secnumdepth}{1}
+\setcounter{tocdepth}{1}
+
 """,
-'classoptions': ',twoside',
-'babel': '\\usepackage[english]{babel}'
+'classoptions': ',twoside,openany',
+'maketitle': '',
+'tableofcontents': r"""
+\thispagestyle{normal}
+\pagestyle{normal}
+\pagenumbering{arabic}
+\setcounter{page}{4}
+"""
 
 }
 
@@ -215,7 +233,7 @@ latex_use_modindex = False
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'Nanaka-inside-c83.tex', u'ななかInside Press vol.2',
-   u'j5ik2o and mtgto and chuross and tboffice and ijust', 'howto'),
+   u'j5ik2o and mtgto and chuross and tboffice and ijust', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -224,8 +242,8 @@ latex_documents = [
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
-#latex_use_parts = False
-latex_use_parts = True
+latex_use_parts = False
+#latex_use_parts = True
 
 # If true, show page references after internal links.
 #latex_show_pagerefs = False

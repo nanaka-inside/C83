@@ -11,13 +11,4 @@ Welcome to Nanaka-inside-c83's documentation!
    :numbered:
 
    first.rst
-   git/git.rst
-   git/git-flow.rst
-   git/jenkins.rst
-   git/git-jenkins-sphinx.rst
    second.rst
-   chuross-dropbox/android-mff.rst
-   irc/irc.rst
-   coreutils/coreutils.rst
-   postgres/postgres-thanks.rst
-   
